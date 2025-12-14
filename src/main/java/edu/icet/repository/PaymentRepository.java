@@ -1,0 +1,11 @@
+package edu.icet.repository;
+
+import edu.icet.model.dto.Payment;
+import edu.icet.model.entity.PaymentEntity;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import java.util.Optional;
+
+public interface PaymentRepository extends JpaRepository<PaymentEntity,Long> {
+    Optional<PaymentEntity> getPaymentByBookingId(Long bookingId);
+}

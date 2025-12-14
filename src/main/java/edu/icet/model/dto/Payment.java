@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Payments {
+public class Payment {
     private Long id;
     private Long bookingId;
     private Double amount;
