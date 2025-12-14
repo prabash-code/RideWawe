@@ -2,10 +2,12 @@ package edu.icet.service;
 
 import edu.icet.model.dto.Car;
 import edu.icet.model.entity.CarType;
+import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
 
+@Service
 public interface CarService {
     Car addNewCar(Car car);
 

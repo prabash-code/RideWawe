@@ -120,9 +120,6 @@ public class CarServiceImpl implements CarService {
                 carEntity.getUpdateDate()
 
         );
-
-
-
     }
 
     @Override
