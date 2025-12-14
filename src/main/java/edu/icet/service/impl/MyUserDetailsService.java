@@ -1,4 +1,4 @@
-package edu.icet.service;
+package edu.icet.service.impl;
 
 import edu.icet.model.dto.User;
 import edu.icet.model.dto.UserPrincipal;

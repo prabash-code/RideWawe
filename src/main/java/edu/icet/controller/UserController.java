@@ -1,7 +1,7 @@
 package edu.icet.controller;
 
 import edu.icet.model.dto.User;
-import edu.icet.service.UserService;
+import edu.icet.service.impl.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 

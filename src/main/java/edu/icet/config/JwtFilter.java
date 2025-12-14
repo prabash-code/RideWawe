@@ -1,7 +1,7 @@
 package edu.icet.config;
 
-import edu.icet.service.JWTService;
-import edu.icet.service.MyUserDetailsService;
+import edu.icet.service.impl.JWTService;
+import edu.icet.service.impl.MyUserDetailsService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
