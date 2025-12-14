@@ -28,6 +28,7 @@ public class UserService {
 
         UserEntity userEntity=new UserEntity();
         userEntity.setUsername(user.getUsername());
+        userEntity.setEmail(user.getEmail());
         userEntity.setNIC(user.getNIC());
         userEntity.setPhone(user.getPhone());
         userEntity.setPassword(encoder.encode(user.getPassword()));
@@ -38,6 +39,7 @@ public class UserService {
         return new User(
                 userEntity.getUserId(),
                 userEntity.getUsername(),
+                userEntity.getEmail(),
                 userEntity.getNIC(),
                 userEntity.getPhone(),
                 userEntity.getPassword(),

@@ -22,14 +22,29 @@ public class UserEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long userId;
+
+    @Column(nullable = false)
     private String username;
+
+    @Column(nullable = false,unique = true)
+    private String email;
+
+    @Column(nullable = false)
     private String NIC;
+
+    @Column(nullable = false)
     private String phone;
+
+    @Column(nullable = false)
     private String password;
+
+    @Column(nullable = false)
     private String role;
+
     @CreatedDate
     @Column(updatable = false)
     private LocalDateTime createdAt;
+
     @UpdateTimestamp
     private LocalDateTime updatedAt;
 }
