@@ -41,9 +41,6 @@ public class BookingEntity {
     private LocalDateTime endDate;
 
     @Column(nullable = false)
-    private Integer rentalDays;
-
-    @Column(nullable = false)
     private double totalAmount;
 
     @Column(nullable = false)

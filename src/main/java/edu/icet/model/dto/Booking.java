@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Builder
 
-public class Bookings {
+public class Booking {
 
     private Long id;
     private Long customerId;
@@ -22,7 +22,6 @@ public class Bookings {
     private String registrationNumber;
     private LocalDateTime startDate;
     private LocalDateTime endDate;
-    private Integer rentalDays;
     private double totalAmount;
     private CarStatus status;
     private LocalDateTime createdAt;
