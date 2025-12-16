@@ -1,7 +1,8 @@
 package edu.icet.controller;
 
 
-import edu.icet.model.dto.Car;
+import edu.icet.model.dto.request.CarRequest;
+import edu.icet.model.dto.response.CarResponse;
 import edu.icet.model.entity.CarType;
 import edu.icet.service.CarService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,35 +14,35 @@ import java.util.List;
 @RestController
 @RequestMapping("/cars")
 public class CarController {
-    List<Car> cars;
+    List<CarResponse> cars;
 
     @Autowired
     CarService carService;
 
     //Add car
     @PostMapping
-    public Car addCar(@RequestBody Car car) {
+    public CarResponse addCar(@RequestBody CarRequest car) {
         return carService.addNewCar(car);
     }
 
     //Get all Cars
     @GetMapping
-    public List<Car> getAllCars() {
+    public List<CarResponse> getAllCars() {
         return carService.getAllCars();
     }
 
 
     //search car by id
     @GetMapping("cars/{id}")
-    public Car getCarById(@PathVariable Long id) {
+    public CarResponse getCarById(@PathVariable Long id) {
         return carService.searchCarById(id);
 
     }
 
     //update car by id
     @PutMapping("/{id}")
-    public Car updateCarDetails(@PathVariable Long id, @RequestBody Car car) {
-        return carService.updateCarDetails(id,car);
+    public CarResponse updateCarDetails(@PathVariable Long id, @RequestBody CarRequest car) {
+        return carService.updateCarDetails(id, car);
     }
 
 
@@ -53,23 +54,20 @@ public class CarController {
 
     //availability of cars
     @GetMapping("/available")
-    public List<Car> getAvailableCars(@RequestParam(required = false)LocalDate startDate,
-                                      @RequestParam(required = false)LocalDate endDate
-                                      ){
-        return carService.getAvailableCars(startDate,endDate);
+    public List<CarResponse> getAvailableCars(@RequestParam(required = false) LocalDate startDate,
+                                              @RequestParam(required = false) LocalDate endDate
+    ) {
+        return carService.getAvailableCars(startDate, endDate);
     }
 
     //search cars
     @GetMapping("/car")
-    public List<Car> searchCar(@RequestParam(required = false)String brand,
-                               @RequestParam(required = false) CarType car,
-                               @RequestParam(required = false) double minPrice,
-                               @RequestParam(required = false) double maxPrice
-                               ){
-        return carService.searchCars(brand,car,minPrice,maxPrice);
+    public List<CarResponse> searchCar(@RequestParam(required = false) String brand,
+                                       @RequestParam(required = false) CarType car,
+                                       @RequestParam(required = false) double minPrice,
+                                       @RequestParam(required = false) double maxPrice
+    ) {
+        return carService.searchCars(brand, car, minPrice, maxPrice);
     }
-
-
-
 
 }

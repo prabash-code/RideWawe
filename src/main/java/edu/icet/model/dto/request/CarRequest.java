@@ -20,7 +20,7 @@ public class CarRequest {
     private String brand;
 
     @NotBlank(message = "Model is required")
-    private String model;
+    private String type;
 
     @NotBlank(message = "Registration number is required")
     private String registrationNumber;
@@ -41,9 +41,6 @@ public class CarRequest {
 
     @DecimalMin(value = "0.0", inclusive = false, message = "Price must be greater than 0")
     private double dailyRentalPrice;
-
-    @NotNull(message = "Car type is required")
-    private CarType carType;
 
     @Size(max = 1000, message = "Description max length is 1000")
     private String description;

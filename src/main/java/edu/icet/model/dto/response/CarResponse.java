@@ -14,6 +14,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+
 public class CarResponse {
     private Long id;
     private String brand;
@@ -26,7 +27,6 @@ public class CarResponse {
     private CarStatus status;
     private String description;
     private String imageUrl;
-    private boolean isAvailable;
     private LocalDateTime createDate;
     private LocalDateTime updateDate;
 }

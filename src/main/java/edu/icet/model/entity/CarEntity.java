@@ -20,6 +20,7 @@ public class CarEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     @Column(nullable = false)
     private String brand;
 
@@ -30,6 +31,9 @@ public class CarEntity {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private FuelType fuelType;
+
+    @Column(nullable = false)
+    private Integer seatingCapacity;
 
     @Column(nullable = false)
     private String registrationNumber;
@@ -49,6 +53,7 @@ public class CarEntity {
 
     @Column(nullable = false)
     private String imageUrl;
+
 
     @CreatedDate
     @Column(updatable = false)

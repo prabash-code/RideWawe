@@ -1,6 +1,7 @@
 package edu.icet.service;
 
-import edu.icet.model.dto.Car;
+import edu.icet.model.dto.request.CarRequest;
+import edu.icet.model.dto.response.CarResponse;
 import edu.icet.model.entity.CarType;
 import org.springframework.stereotype.Service;
 
@@ -9,17 +10,17 @@ import java.util.List;
 
 @Service
 public interface CarService {
-    Car addNewCar(Car car);
+    CarResponse addNewCar(CarRequest car);
 
-    List<Car> getAllCars();
+    List<CarResponse> getAllCars();
 
-    Car searchCarById(Long id);
+    CarResponse searchCarById(Long id);
 
-    Car updateCarDetails(Long id,Car car);
+    CarResponse updateCarDetails(Long id,CarRequest car);
 
     void deleteCar(Long id);
 
-    List<Car> getAvailableCars(LocalDate startDate, LocalDate endDate);
+    List<CarResponse> getAvailableCars(LocalDate startDate, LocalDate endDate);
 
-    List<Car> searchCars(String brand, CarType car, double minPrice, double maxPrice);
+    List<CarResponse> searchCars(String brand, CarType car, double minPrice, double maxPrice);
 }

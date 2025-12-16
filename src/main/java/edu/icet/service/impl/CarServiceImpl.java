@@ -1,6 +1,7 @@
 package edu.icet.service.impl;
 
-import edu.icet.model.dto.Car;
+import edu.icet.model.dto.request.CarRequest;
+import edu.icet.model.dto.response.CarResponse;
 import edu.icet.model.entity.CarEntity;
 import edu.icet.model.entity.CarType;
 import edu.icet.repository.CarRepository;
@@ -12,7 +13,6 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class CarServiceImpl implements CarService {
@@ -20,25 +20,27 @@ public class CarServiceImpl implements CarService {
     CarRepository carRepository;
 
     @Override
-    public Car addNewCar(Car car) {
+    public CarResponse addNewCar(CarRequest car) {
 
         CarEntity carEntity = new CarEntity();
+
         carEntity.setBrand(car.getBrand());
-        carEntity.setType(car.getType());
+        carEntity.setType(CarType.valueOf(car.getType()));
         carEntity.setFuelType(car.getFuelType());
         carEntity.setRegistrationNumber(car.getRegistrationNumber());
         carEntity.setYear(car.getYear());
+        carEntity.setSeatingCapacity(car.getSeatingCapacity());
         carEntity.setDailyRentalPrice(car.getDailyRentalPrice());
-        carEntity.setStatus(car.getStatus());
         carEntity.setDescription(car.getDescription());
         carEntity.setImageUrl(car.getImageUrl());
 
-        return new Car(carEntity.getId(),
+        return new CarResponse(carEntity.getId(),
                 carEntity.getBrand(),
                 carEntity.getType(),
                 carEntity.getFuelType(),
                 carEntity.getRegistrationNumber(),
                 carEntity.getYear(),
+                carEntity.getSeatingCapacity(),
                 carEntity.getDailyRentalPrice(),
                 carEntity.getStatus(),
                 carEntity.getDescription(),
@@ -49,19 +51,20 @@ public class CarServiceImpl implements CarService {
     }
 
     @Override
-    public List<Car> getAllCars() {
+    public List<CarResponse> getAllCars() {
 
-        List<Car> carList = new ArrayList<>();
+        List<CarResponse> carList = new ArrayList<>();
         List<CarEntity> allCars = carRepository.findAll();
 
         for (CarEntity carEntity : allCars) {
-            carList.add(new Car(
+            carList.add(new CarResponse(
                     carEntity.getId(),
                     carEntity.getBrand(),
                     carEntity.getType(),
                     carEntity.getFuelType(),
                     carEntity.getRegistrationNumber(),
                     carEntity.getYear(),
+                    carEntity.getSeatingCapacity(),
                     carEntity.getDailyRentalPrice(),
                     carEntity.getStatus(),
                     carEntity.getDescription(),
@@ -74,15 +77,16 @@ public class CarServiceImpl implements CarService {
     }
 
     @Override
-    public Car searchCarById(Long id) {
+    public CarResponse searchCarById(Long id) {
         CarEntity carEntity = carRepository.findById(id)
                 .orElseThrow(()->new RuntimeException("Car not found with id "+id));
-        return new Car(carEntity.getId(),
+        return new CarResponse(carEntity.getId(),
                 carEntity.getBrand(),
                 carEntity.getType(),
                 carEntity.getFuelType(),
                 carEntity.getRegistrationNumber(),
                 carEntity.getYear(),
+                carEntity.getSeatingCapacity(),
                 carEntity.getDailyRentalPrice(),
                 carEntity.getStatus(),
                 carEntity.getDescription(),
@@ -92,26 +96,28 @@ public class CarServiceImpl implements CarService {
     }
 
     @Override
-    public Car updateCarDetails(Long id,Car car) {
+    public CarResponse updateCarDetails(Long id,CarRequest car) {
         CarEntity carEntity = carRepository.findById(id)
                 .orElseThrow(()->new RuntimeException("Car not found with id "+id));
 
         carEntity.setBrand(car.getBrand());
-        carEntity.setType(car.getType());
+        carEntity.setType(CarType.valueOf(car.getType()));
         carEntity.setFuelType(car.getFuelType());
         carEntity.setRegistrationNumber(car.getRegistrationNumber());
         carEntity.setYear(car.getYear());
+        carEntity.setSeatingCapacity(car.getSeatingCapacity());
         carEntity.setDailyRentalPrice(car.getDailyRentalPrice());
-        carEntity.setStatus(car.getStatus());
         carEntity.setDescription(car.getDescription());
         carEntity.setImageUrl(car.getImageUrl());
 
-        return new Car(carEntity.getId(),
+        return new CarResponse(
+                carEntity.getId(),
                 carEntity.getBrand(),
                 carEntity.getType(),
                 carEntity.getFuelType(),
                 carEntity.getRegistrationNumber(),
                 carEntity.getYear(),
+                carEntity.getSeatingCapacity(),
                 carEntity.getDailyRentalPrice(),
                 carEntity.getStatus(),
                 carEntity.getDescription(),
@@ -129,18 +135,19 @@ public class CarServiceImpl implements CarService {
     }
 
     @Override
-    public List<Car> getAvailableCars(LocalDate startDate, LocalDate endDate) {
+    public List<CarResponse> getAvailableCars(LocalDate startDate, LocalDate endDate) {
         List<CarEntity> all = carRepository.findAll();
-        List<Car> available=new ArrayList<>();
+        List<CarResponse> available=new ArrayList<>();
         for(CarEntity carEntity:all){
             if (carEntity.getStatus().toString()=="AVAILABLE") {
-                available.add(new Car(
+                available.add(new CarResponse(
                         carEntity.getId(),
                         carEntity.getBrand(),
                         carEntity.getType(),
                         carEntity.getFuelType(),
                         carEntity.getRegistrationNumber(),
                         carEntity.getYear(),
+                        carEntity.getSeatingCapacity(),
                         carEntity.getDailyRentalPrice(),
                         carEntity.getStatus(),
                         carEntity.getDescription(),
@@ -148,6 +155,7 @@ public class CarServiceImpl implements CarService {
                         carEntity.getCreateDate(),
                         carEntity.getUpdateDate()
                 ));
+
             }
 
         }
@@ -156,7 +164,7 @@ public class CarServiceImpl implements CarService {
     }
 
     @Override
-    public List<Car> searchCars(String brand, CarType car, double minPrice, double maxPrice) {
+    public List<CarResponse> searchCars(String brand, CarType car, double minPrice, double maxPrice) {
         Specification<CarEntity>spec=
                  CarSpecification.hasBrand(brand)
                 .and(CarSpecification.hasType(car))
@@ -166,19 +174,19 @@ public class CarServiceImpl implements CarService {
 
     return carRepository.findAll(spec).stream()
             .map(carEntity -> {
-            return new Car( carEntity.getId(),
+            return new CarResponse( carEntity.getId(),
                     carEntity.getBrand(),
                     carEntity.getType(),
                     carEntity.getFuelType(),
                     carEntity.getRegistrationNumber(),
                     carEntity.getYear(),
+                    carEntity.getSeatingCapacity(),
                     carEntity.getDailyRentalPrice(),
                     carEntity.getStatus(),
                     carEntity.getDescription(),
                     carEntity.getImageUrl(),
                     carEntity.getCreateDate(),
                     carEntity.getUpdateDate()
-
             );
         }
 )
