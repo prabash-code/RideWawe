@@ -46,7 +46,7 @@ public class BookingController {
     //update bookings status
 
     @PatchMapping("/{id}")
-    public BookingRequest updateBooking(@PathVariable Long id, @RequestParam CarStatus status){
+    public BookingResponse updateBooking(@PathVariable Long id, @RequestParam CarStatus status){
       return bookingServices.updateBooking(id,status);
     }
 
