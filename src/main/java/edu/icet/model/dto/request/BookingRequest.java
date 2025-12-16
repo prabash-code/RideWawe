@@ -7,15 +7,16 @@ import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Data
 public class BookingRequest {
     @NotNull
-    private Long carId;
+    private Long id;
 
     @NotNull @Future
-    private LocalDate startDate;
+    private LocalDateTime startDate;
 
     @NotNull @Future
-    private LocalDate endDate;
+    private LocalDateTime endDate;
 }

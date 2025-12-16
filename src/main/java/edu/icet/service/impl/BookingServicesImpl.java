@@ -1,7 +1,7 @@
 package edu.icet.service.impl;
 
-import edu.icet.model.dto.Booking;
-import edu.icet.model.dto.User;
+import edu.icet.model.dto.request.BookingRequest;
+import edu.icet.model.dto.response.BookingResponse;
 import edu.icet.model.entity.BookingEntity;
 import edu.icet.model.entity.CarStatus;
 import edu.icet.model.entity.UserEntity;
@@ -11,11 +11,9 @@ import edu.icet.service.BookingServices;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class BookingServicesImpl implements BookingServices {
@@ -26,19 +24,15 @@ public class BookingServicesImpl implements BookingServices {
     UserRepository userRepository;
 
     @Override
-    public Booking createNewBooking(Booking booking) {
+    public BookingResponse createNewBooking(BookingRequest booking) {
         BookingEntity bookingEntity = new BookingEntity();
 
-        bookingEntity.setCustomerId(booking.getCustomerId());
-        bookingEntity.setCustomerName(booking.getCustomerName());
-        bookingEntity.setCustomerEmail(booking.getCustomerEmail());
-        bookingEntity.setRegistrationNumber(booking.getRegistrationNumber());
-        bookingEntity.setStartDate(booking.getStartDate());
-        bookingEntity.setEndDate(booking.getEndDate());
-        bookingEntity.setTotalAmount(booking.getTotalAmount());
-        bookingEntity.setStatus(booking.getStatus());
+            bookingEntity.setId(booking.getId());
+            bookingEntity.setStartDate(booking.getStartDate());
+            bookingEntity.setEndDate(booking.getEndDate());
 
-        return new Booking(
+
+        return new BookingResponse(
                 bookingEntity.getId(),
                 bookingEntity.getCustomerId(),
                 bookingEntity.getCustomerName(),
@@ -54,8 +48,8 @@ public class BookingServicesImpl implements BookingServices {
     }
 
     @Override
-    public List<Booking> getMyBookings(String email) {
-        List<Booking> myList=new ArrayList<>();
+    public List<BookingResponse> getMyBookings(String email) {
+        List<BookingResponse> myList=new ArrayList<>();
         UserEntity userEntity = userRepository.findUserByEmail(email)
                 .orElseThrow(() -> new RuntimeException("User Cannot find "));
 
@@ -64,7 +58,7 @@ public class BookingServicesImpl implements BookingServices {
         List<BookingEntity> booksEntity = bookingRepository.findAllById(Collections.singleton(userId));
 
         for(BookingEntity bookingEntity:booksEntity){
-            myList.add(new Booking(
+            myList.add(new BookingResponse(
                     bookingEntity.getId(),
                     bookingEntity.getCustomerId(),
                     bookingEntity.getCustomerName(),
@@ -82,12 +76,12 @@ public class BookingServicesImpl implements BookingServices {
     }
 
     @Override
-    public List<Booking> getAllBookings() {
+    public List<BookingResponse> getAllBookings() {
 
-        List<Booking> bookingsList = new ArrayList<>();
+        List<BookingResponse> bookingsList = new ArrayList<>();
         List<BookingEntity> all = bookingRepository.findAll();
         for (BookingEntity booking : all) {
-            bookingsList.add(new Booking(
+            bookingsList.add(new BookingResponse(
                     booking.getId(),
                     booking.getCustomerId(),
                     booking.getCustomerName(),
@@ -105,11 +99,11 @@ public class BookingServicesImpl implements BookingServices {
     }
 
     @Override
-    public Booking getBookingById(Long id) {
+    public BookingResponse getBookingById(Long id) {
         BookingEntity bookingEntity = bookingRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Booking not found with id " + id));
 
-        return new Booking(
+        return new BookingResponse(
                 bookingEntity.getId(),
                 bookingEntity.getCustomerId(),
                 bookingEntity.getCustomerName(),
@@ -125,13 +119,13 @@ public class BookingServicesImpl implements BookingServices {
     }
 
     @Override
-    public Booking updateBooking(Long id, CarStatus status) {
+    public BookingResponse updateBooking(Long id, CarStatus status) {
         BookingEntity booking = bookingRepository.findById(id)
                  .orElseThrow(() -> new RuntimeException("Booking not found"));
 
         booking.setStatus(status);
 
-        return new Booking(
+        return new BookingResponse(
                 booking.getId(),
                 booking.getCustomerId(),
                 booking.getCustomerName(),
