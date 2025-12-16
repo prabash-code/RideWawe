@@ -1,7 +1,7 @@
 package edu.icet.service.impl;
 
-import edu.icet.model.dto.User;
-import edu.icet.model.dto.UserPrincipal;
+
+import edu.icet.model.dto.response.UserResponse;
 import edu.icet.model.entity.UserEntity;
 import edu.icet.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,14 +10,17 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.nio.file.attribute.UserPrincipal;
+
 @Service
 public class MyUserDetailsService implements UserDetailsService {
     @Autowired
     UserRepository userRepository;
+
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         UserEntity userEntity=userRepository.findByUsername(username);
-        User user=new User(userEntity.getUserId(),
+        UserResponse user=new UserResponse(userEntity.getUserId(),
                 userEntity.getUsername(),
                 userEntity.getEmail(),
                 userEntity.getNIC(),
@@ -31,6 +34,6 @@ public class MyUserDetailsService implements UserDetailsService {
             System.out.println("User Not Found");
             throw new UsernameNotFoundException("User Name Not Found");
         }
-return new UserPrincipal(user);
+return new UserResponse(user);
     }
 }

@@ -1,7 +1,7 @@
 package edu.icet.service.impl;
 
-import edu.icet.model.dto.Booking;
-import edu.icet.model.dto.Payment;
+import edu.icet.model.dto.request.PaymentRequest;
+import edu.icet.model.dto.response.PaymentResponse;
 import edu.icet.model.entity.PaymentEntity;
 import edu.icet.repository.PaymentRepository;
 import edu.icet.service.PaymentServices;
@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class PaymentServicesImpl implements PaymentServices  {
@@ -19,12 +18,12 @@ public class PaymentServicesImpl implements PaymentServices  {
 
     //get all payments
     @Override
-    public List<Payment> getAllPayments() {
-        List<Payment> list=new ArrayList<>();
+    public List<PaymentResponse> getAllPayments() {
+        List<PaymentResponse> list=new ArrayList<>();
         List<PaymentEntity> all = paymentRepository.findAll();
          
         for(PaymentEntity paymentEntity:all){
-            list.add(new Payment(
+            list.add(new PaymentResponse(
                     paymentEntity.getId(),
                     paymentEntity.getBookingId(),
                     paymentEntity.getAmount(),
@@ -38,15 +37,13 @@ public class PaymentServicesImpl implements PaymentServices  {
 
     //create payment
     @Override
-    public Payment createNewPayment(Payment payment) {
+    public PaymentResponse createNewPayment(PaymentRequest payment) {
       PaymentEntity paymentEntity=new PaymentEntity();
 
-      paymentEntity.setType(payment.getType());
-      paymentEntity.setAmount(payment.getAmount());
       paymentEntity.setMethod(payment.getMethod());
       paymentEntity.setBookingId(payment.getBookingId());
 
-      return new Payment(
+      return new PaymentResponse(
               paymentEntity.getId(),
               paymentEntity.getBookingId(),
               paymentEntity.getAmount(),
@@ -57,11 +54,11 @@ public class PaymentServicesImpl implements PaymentServices  {
     }
 
     @Override
-    public Payment getPaymentById(Long id) {
+    public PaymentResponse getPaymentById(Long id) {
         PaymentEntity paymentEntity = paymentRepository.findById(id)
                 .orElseThrow(()->new RuntimeException("No such payment"));
 
-        return new Payment(
+        return new PaymentResponse(
                 paymentEntity.getId(),
                 paymentEntity.getBookingId(),
                 paymentEntity.getAmount(),
@@ -72,11 +69,11 @@ public class PaymentServicesImpl implements PaymentServices  {
     }
 
     @Override
-    public Payment getPaymentByBookingId(Long bookingId) {
+    public PaymentResponse getPaymentByBookingId(Long bookingId) {
         PaymentEntity paymentEntity=paymentRepository.getPaymentByBookingId(bookingId)
                 .orElseThrow(()->new RuntimeException("No matching Booking Id"));
 
-        return new Payment(
+        return new PaymentResponse(
                 paymentEntity.getId(),
                 paymentEntity.getBookingId(),
                 paymentEntity.getAmount(),
