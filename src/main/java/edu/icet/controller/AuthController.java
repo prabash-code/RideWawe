@@ -1,7 +1,8 @@
 package edu.icet.controller;
 
-import edu.icet.model.dto.User;
-import edu.icet.service.impl.UserService;
+import edu.icet.model.dto.request.UserRequest;
+import edu.icet.model.dto.response.UserResponse;
+import edu.icet.service.impl.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -10,17 +11,17 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/user-control")
 
 
-public class UserController {
+public class AuthController {
     @Autowired
-    private UserService service;
+    private AuthService service;
 
     @PostMapping("/register")
-    public User register(@RequestBody edu.icet.model.dto.User user){
+    public UserResponse register(@RequestBody UserRequest user){
          return service.register(user);
     }
 
     @PostMapping("/login")
-    public String login(@RequestBody User user){
+    public String login(@RequestBody UserRequest user){
         return service.verify(user);
 
 
