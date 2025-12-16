@@ -19,6 +19,7 @@ public class MyUserDetailsService implements UserDetailsService {
         UserEntity userEntity=userRepository.findByUsername(username);
         User user=new User(userEntity.getUserId(),
                 userEntity.getUsername(),
+                userEntity.getEmail(),
                 userEntity.getNIC(),
                 userEntity.getPhone(),
                 userEntity.getPassword(),

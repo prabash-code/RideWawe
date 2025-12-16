@@ -6,8 +6,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/user")
 @CrossOrigin(origins = "http://localhost:5173")
+@RequestMapping("/user-control")
+
+
 public class UserController {
     @Autowired
     private UserService service;
@@ -20,6 +22,8 @@ public class UserController {
     @PostMapping("/login")
     public String login(@RequestBody User user){
         return service.verify(user);
+
+
 
     }
 }

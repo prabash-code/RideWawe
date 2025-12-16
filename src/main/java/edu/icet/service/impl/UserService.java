@@ -3,6 +3,7 @@ package edu.icet.service.impl;
 import edu.icet.model.dto.User;
 import edu.icet.model.entity.UserEntity;
 import edu.icet.repository.UserRepository;
+import edu.icet.security.JWTService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

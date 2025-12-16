@@ -1,5 +1,6 @@
 package edu.icet.config;
 
+import edu.icet.security.JwtFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -14,9 +15,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
@@ -39,7 +38,7 @@ public class SecurityConfig {
        http.csrf(customizer->customizer.disable());
        http.cors(Customizer.withDefaults());
        http.authorizeHttpRequests(request->request
-               .requestMatchers("/user/register","/user/login")
+               .requestMatchers("/user-control/register","/user-control/login")
                .permitAll()
                .anyRequest()
                .authenticated());

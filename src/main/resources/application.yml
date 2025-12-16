@@ -17,3 +17,11 @@ spring:
 #    user:
 #      name: prabash
 #      password: 12345
+
+jwt:
+  secret: QEYjUmVValqYNyNxdDh4L0E/RChHLUtiUGRTZ1ZrWWc=
+  expiration: 3600000
+
+logging:
+  level:
+    io.jsonwebtoken: DEBUG
