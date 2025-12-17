@@ -14,26 +14,31 @@ import java.nio.file.attribute.UserPrincipal;
 
 @Service
 public class MyUserDetailsService implements UserDetailsService {
+
     @Autowired
-    UserRepository userRepository;
+    private UserRepository userRepository;
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        UserEntity userEntity=userRepository.findByUsername(username);
-        UserResponse user=new UserResponse(userEntity.getUserId(),
-                userEntity.getUsername(),
-                userEntity.getEmail(),
-                userEntity.getNIC(),
-                userEntity.getPhone(),
-                userEntity.getPassword(),
-                userEntity.getRole(),
-                userEntity.getCreatedAt(),
-                userEntity.getUpdatedAt()
-                );
-        if(userEntity==null){
-            System.out.println("User Not Found");
-            throw new UsernameNotFoundException("User Name Not Found");
+    public UserDetails loadUserByUsername(String username)
+            throws UsernameNotFoundException {
+
+        UserEntity userEntity = userRepository.findByUsername(username);
+
+        if (userEntity == null) {
+            throw new UsernameNotFoundException(
+                    "User not found with username: " + username);
         }
-return new UserResponse(user);
+
+        String roleWithPrefix = "ROLE_" + userEntity.getRole();
+
+        return org.springframework.security.core.userdetails.User.builder()
+                .username(userEntity.getUsername())
+                .password(userEntity.getPassword())
+                .authorities(roleWithPrefix)
+                .build();
+
     }
+
 }
+
+

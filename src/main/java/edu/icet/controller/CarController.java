@@ -6,6 +6,7 @@ import edu.icet.model.dto.response.CarResponse;
 import edu.icet.model.entity.CarType;
 import edu.icet.service.CarService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -33,7 +34,7 @@ public class CarController {
 
 
     //search car by id
-    @GetMapping("cars/{id}")
+    @GetMapping("/{id}")
     public CarResponse getCarById(@PathVariable Long id) {
         return carService.searchCarById(id);
 
@@ -61,7 +62,7 @@ public class CarController {
     }
 
     //search cars
-    @GetMapping("/car")
+    @GetMapping("/search")
     public List<CarResponse> searchCar(@RequestParam(required = false) String brand,
                                        @RequestParam(required = false) CarType car,
                                        @RequestParam(required = false) double minPrice,

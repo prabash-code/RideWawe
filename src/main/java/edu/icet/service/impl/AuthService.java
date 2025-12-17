@@ -31,8 +31,10 @@ public class AuthService {
 
         UserEntity userEntity=new UserEntity();
 
+        userEntity.setUsername(user.getUserName());
         userEntity.setEmail(user.getEmail());
         userEntity.setPassword(encoder.encode(user.getPassword()));
+        userEntity.setRole("USER");
 
 
         userRepository.save(userEntity);
@@ -51,9 +53,9 @@ public class AuthService {
     }
 
     public String verify(UserRequest user) {
-        Authentication authentication=manager.authenticate(new UsernamePasswordAuthenticationToken(user.getEmail(),user.getPassword()));
+        Authentication authentication=manager.authenticate(new UsernamePasswordAuthenticationToken(user.getUserName(),user.getPassword()));
         if(authentication.isAuthenticated())
-            return jwtService.generateToken(user.getEmail());
+            return jwtService.generateToken(user.getUserName());
 
         return "fail";
 

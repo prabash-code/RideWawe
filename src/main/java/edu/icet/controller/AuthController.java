@@ -24,7 +24,5 @@ public class AuthController {
     public String login(@RequestBody UserRequest user){
         return service.verify(user);
 
-
-
     }
 }
