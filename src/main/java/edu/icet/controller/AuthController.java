@@ -1,5 +1,6 @@
 package edu.icet.controller;
 
+import edu.icet.model.dto.request.UserRegistrationRequest;
 import edu.icet.model.dto.request.UserRequest;
 import edu.icet.model.dto.response.UserResponse;
 import edu.icet.service.impl.AuthService;
@@ -16,7 +17,7 @@ public class AuthController {
     private AuthService service;
 
     @PostMapping("/register")
-    public UserResponse register(@RequestBody UserRequest user){
+    public UserResponse register(@RequestBody UserRegistrationRequest user){
          return service.register(user);
     }
 
