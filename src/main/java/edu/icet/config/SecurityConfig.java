@@ -54,6 +54,7 @@ public class SecurityConfig {
                                 "/user-control/login"
                         ).permitAll()
                         .requestMatchers("/cars/**").hasRole("USER")
+                        .requestMatchers("/cars/**").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
 
@@ -63,7 +64,6 @@ public class SecurityConfig {
                         jwtFilter,
                         UsernamePasswordAuthenticationFilter.class
                 );
-
         return http.build();
     }
 
@@ -98,9 +98,7 @@ public class SecurityConfig {
         config.addAllowedOrigin("http://localhost:5173");
         config.addAllowedHeader("*");
         config.addAllowedMethod("*");
-
-        UrlBasedCorsConfigurationSource source =
-                new UrlBasedCorsConfigurationSource();
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", config);
         return source;
     }

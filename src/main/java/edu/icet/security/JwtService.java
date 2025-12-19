@@ -15,7 +15,7 @@ import java.util.Date;
 
 @Service
 @Slf4j
-public class JWTService {
+public class JwtService {
 
     @Value("${jwt.secret}")
     private String secretKey;
@@ -28,10 +28,10 @@ public class JWTService {
         return Keys.hmacShaKeyFor(keyBytes);
     }
 
-    public String
-    generateToken(String username) {
-        return Jwts.builder()
-                .setSubject(username)
+    public String generateToken(String email) {
+        return Jwts
+                .builder()
+                .setSubject(email)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + jwtExpiration))
                 .signWith(getSigningKey(), SignatureAlgorithm.HS256)

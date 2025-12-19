@@ -1,6 +1,5 @@
 package edu.icet.model.dto.request;
 
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,14 +12,12 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class UserRequest {
+public class LoginRequest {
 
-    @NotNull
-    private String userName;
 
-    //@NotBlank(message = "Email is required")
-//    @Email(message = "Invalid email format")
-//    private String email;
+    @NotBlank(message = "Email is required")
+    @Email(message = "Invalid email format")
+    private String email;
 
     @NotBlank(message = "Password is required")
     private String password;

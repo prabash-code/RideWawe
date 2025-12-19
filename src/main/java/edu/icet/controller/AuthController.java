@@ -1,15 +1,17 @@
 package edu.icet.controller;
 
-import edu.icet.model.dto.request.UserRegistrationRequest;
-import edu.icet.model.dto.request.UserRequest;
+import edu.icet.model.dto.request.RegistrationRequest;
+import edu.icet.model.dto.request.LoginRequest;
 import edu.icet.model.dto.response.UserResponse;
 import edu.icet.service.impl.AuthService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:5173")
 @RequestMapping("/user-control")
+@RequiredArgsConstructor
+@CrossOrigin(origins = "http://localhost:5173")
 
 
 public class AuthController {
@@ -17,12 +19,12 @@ public class AuthController {
     private AuthService service;
 
     @PostMapping("/register")
-    public UserResponse register(@RequestBody UserRegistrationRequest user){
+    public UserResponse register(@RequestBody RegistrationRequest user){
          return service.register(user);
     }
 
     @PostMapping("/login")
-    public String login(@RequestBody UserRequest user){
+    public String login(@RequestBody LoginRequest user){
         return service.verify(user);
 
     }
