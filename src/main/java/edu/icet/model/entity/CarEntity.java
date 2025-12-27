@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
 @Data
@@ -15,7 +16,7 @@ import java.time.LocalDateTime;
 @Builder
 @Entity
 @Table(name = "car_details")
-
+@EntityListeners(AuditingEntityListener.class)
 public class CarEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

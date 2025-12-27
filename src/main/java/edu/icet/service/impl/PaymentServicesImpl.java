@@ -5,6 +5,7 @@ import edu.icet.model.dto.response.PaymentResponse;
 import edu.icet.model.entity.PaymentEntity;
 import edu.icet.repository.PaymentRepository;
 import edu.icet.service.PaymentServices;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,9 +13,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class PaymentServicesImpl implements PaymentServices  {
-    @Autowired
-    PaymentRepository paymentRepository;
+    private final PaymentRepository paymentRepository;
 
     //get all payments
     @Override

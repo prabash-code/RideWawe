@@ -4,17 +4,18 @@ import edu.icet.model.dto.request.BookingRequest;
 import edu.icet.model.dto.response.BookingResponse;
 import edu.icet.model.entity.CarStatus;
 import edu.icet.service.BookingServices;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
+import lombok.RequiredArgsConstructor;
+//import org.springframework.beans.factory.annotation.Autowired;
+//import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/bookings")
+@RequiredArgsConstructor
 public class BookingController {
-  @Autowired
-    BookingServices bookingServices;
+  private final  BookingServices bookingServices;
 
   //create new booking
   @PostMapping
@@ -23,12 +24,12 @@ public class BookingController {
     }
 
     //get my bookings
-    @GetMapping("/my-bookings")
-    public List<BookingResponse> getMyBookings(
-            @RequestParam Authentication authentication){
-      return bookingServices.getMyBookings(authentication.getName());
-
-    }
+//    @GetMapping("/my-bookings")
+//    public List<BookingResponse> getMyBookings(
+//            @RequestParam Authentication authentication){
+//      return bookingServices.getMyBookings(authentication.getName());
+//
+//    }
     //get all bookings
 
     @GetMapping

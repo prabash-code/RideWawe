@@ -28,6 +28,10 @@ public class AuthService {
 
     public UserResponse  register(RegistrationRequest user){
 
+        if(userRepository.existsByEmail(user.getEmail())){
+            throw new RuntimeException("Email is already used!!");
+        }
+
         UserEntity userEntity=new UserEntity();
 
         userEntity.setUsername(user.getUserName());

@@ -3,9 +3,11 @@ package edu.icet.service.impl;
 import edu.icet.model.dto.request.CarRequest;
 import edu.icet.model.dto.response.CarResponse;
 import edu.icet.model.entity.CarEntity;
+import edu.icet.model.entity.CarStatus;
 import edu.icet.model.entity.CarType;
 import edu.icet.repository.CarRepository;
 import edu.icet.service.CarService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
@@ -15,17 +17,25 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class CarServiceImpl implements CarService {
-    @Autowired
-    CarRepository carRepository;
+    private final CarRepository carRepository;
 
     @Override
     public CarResponse addNewCar(CarRequest car) {
 
+        if (car.getType() == null || car.getType().isBlank()) {
+            throw new RuntimeException("Car type is required");
+        }
+
         CarEntity carEntity = new CarEntity();
 
         carEntity.setBrand(car.getBrand());
-        carEntity.setType(CarType.valueOf(car.getType()));
+        try {
+            carEntity.setType(CarType.valueOf(car.getType().toUpperCase()));
+        } catch (IllegalArgumentException e) {
+            throw new RuntimeException("Invalid Car Type " + car.getType());
+        }
         carEntity.setFuelType(car.getFuelType());
         carEntity.setRegistrationNumber(car.getRegistrationNumber());
         carEntity.setYear(car.getYear());
@@ -33,6 +43,9 @@ public class CarServiceImpl implements CarService {
         carEntity.setDailyRentalPrice(car.getDailyRentalPrice());
         carEntity.setDescription(car.getDescription());
         carEntity.setImageUrl(car.getImageUrl());
+        carEntity.setStatus(CarStatus.AVAILABLE);
+
+        carRepository.save(carEntity);
 
         return new CarResponse(carEntity.getId(),
                 carEntity.getBrand(),
@@ -79,7 +92,7 @@ public class CarServiceImpl implements CarService {
     @Override
     public CarResponse searchCarById(Long id) {
         CarEntity carEntity = carRepository.findById(id)
-                .orElseThrow(()->new RuntimeException("Car not found with id "+id));
+                .orElseThrow(() -> new RuntimeException("Car not found with id " + id));
         return new CarResponse(carEntity.getId(),
                 carEntity.getBrand(),
                 carEntity.getType(),
@@ -96,12 +109,16 @@ public class CarServiceImpl implements CarService {
     }
 
     @Override
-    public CarResponse updateCarDetails(Long id,CarRequest car) {
+    public CarResponse updateCarDetails(Long id, CarRequest car) {
         CarEntity carEntity = carRepository.findById(id)
-                .orElseThrow(()->new RuntimeException("Car not found with id "+id));
+                .orElseThrow(() -> new RuntimeException("Car not found with id " + id));
 
         carEntity.setBrand(car.getBrand());
-        carEntity.setType(CarType.valueOf(car.getType()));
+        try {
+            carEntity.setType(CarType.valueOf(car.getType().toUpperCase()));
+        } catch (IllegalArgumentException e) {
+            throw new RuntimeException("Invalid car type: " + car.getType());
+        }
         carEntity.setFuelType(car.getFuelType());
         carEntity.setRegistrationNumber(car.getRegistrationNumber());
         carEntity.setYear(car.getYear());
@@ -109,6 +126,8 @@ public class CarServiceImpl implements CarService {
         carEntity.setDailyRentalPrice(car.getDailyRentalPrice());
         carEntity.setDescription(car.getDescription());
         carEntity.setImageUrl(car.getImageUrl());
+        carEntity.setStatus(CarStatus.AVAILABLE);
+        carRepository.save(carEntity);
 
         return new CarResponse(
                 carEntity.getId(),
@@ -137,9 +156,9 @@ public class CarServiceImpl implements CarService {
     @Override
     public List<CarResponse> getAvailableCars(LocalDate startDate, LocalDate endDate) {
         List<CarEntity> all = carRepository.findAll();
-        List<CarResponse> available=new ArrayList<>();
-        for(CarEntity carEntity:all){
-            if (carEntity.getStatus().toString()=="AVAILABLE") {
+        List<CarResponse> available = new ArrayList<>();
+        for (CarEntity carEntity : all) {
+            if ("AVAILABLE".equals(carEntity.getStatus().toString())) {
                 available.add(new CarResponse(
                         carEntity.getId(),
                         carEntity.getBrand(),
@@ -164,36 +183,47 @@ public class CarServiceImpl implements CarService {
     }
 
     @Override
-    public List<CarResponse> searchCars(String brand, CarType car, double minPrice, double maxPrice) {
-        Specification<CarEntity>spec=
-                 CarSpecification.hasBrand(brand)
-                .and(CarSpecification.hasType(car))
-                .and(CarSpecification.minPrice(minPrice))
-                .and(CarSpecification.maxPrice(maxPrice));
+    public List<CarResponse> searchCars(String brand, CarType car, Double minPrice, Double maxPrice) {
+            Specification<CarEntity> spec = null;
 
 
-    return carRepository.findAll(spec).stream()
-            .map(carEntity -> {
-            return new CarResponse( carEntity.getId(),
-                    carEntity.getBrand(),
-                    carEntity.getType(),
-                    carEntity.getFuelType(),
-                    carEntity.getRegistrationNumber(),
-                    carEntity.getYear(),
-                    carEntity.getSeatingCapacity(),
-                    carEntity.getDailyRentalPrice(),
-                    carEntity.getStatus(),
-                    carEntity.getDescription(),
-                    carEntity.getImageUrl(),
-                    carEntity.getCreateDate(),
-                    carEntity.getUpdateDate()
-            );
+            if (brand != null && !brand.isBlank()) {
+                spec = CarSpecification.hasBrand(brand);
+            }
+
+            if (car != null) {
+                spec = (spec == null) ? CarSpecification.hasType(car) : spec.and(CarSpecification.hasType(car));
+            }
+
+            if (minPrice != null && minPrice > 0) {
+                spec = (spec == null) ? CarSpecification.minPrice(minPrice) : spec.and(CarSpecification.minPrice(minPrice));
+            }
+
+            if (maxPrice != null && maxPrice > 0) {
+                spec = (spec == null) ? CarSpecification.maxPrice(maxPrice) : spec.and(CarSpecification.maxPrice(maxPrice));
+            }
+
+            List<CarEntity> result = (spec == null) ? carRepository.findAll() : carRepository.findAll(spec);
+
+            return result.stream()
+                    .map(carEntity -> new CarResponse(
+                            carEntity.getId(),
+                            carEntity.getBrand(),
+                            carEntity.getType(),
+                            carEntity.getFuelType(),
+                            carEntity.getRegistrationNumber(),
+                            carEntity.getYear(),
+                            carEntity.getSeatingCapacity(),
+                            carEntity.getDailyRentalPrice(),
+                            carEntity.getStatus(),
+                            carEntity.getDescription(),
+                            carEntity.getImageUrl(),
+                            carEntity.getCreateDate(),
+                            carEntity.getUpdateDate()
+                    ))
+                    .toList();
         }
-)
-            .toList();
+
+
+
     }
-
-
-
-
-}

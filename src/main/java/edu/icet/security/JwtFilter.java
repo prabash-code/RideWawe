@@ -33,6 +33,16 @@ public class JwtFilter extends OncePerRequestFilter {
         String token = null;
         String username = null;
 
+        String path = request.getServletPath();
+
+        // 🔓 Skip JWT check for public endpoints
+        if (path.equals("/user-control/register") ||
+                path.equals("/user-control/login")) {
+
+            filterChain.doFilter(request, response);
+            return;
+        }
+
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
             token = authHeader.substring(7);
 

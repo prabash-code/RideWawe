@@ -5,8 +5,9 @@ import edu.icet.model.dto.request.CarRequest;
 import edu.icet.model.dto.response.CarResponse;
 import edu.icet.model.entity.CarType;
 import edu.icet.service.CarService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
+import lombok.RequiredArgsConstructor;
+//import org.springframework.beans.factory.annotation.Autowired;
+//import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -14,11 +15,11 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/cars")
+@RequiredArgsConstructor
 public class CarController {
+    private final CarService carService;
     List<CarResponse> cars;
 
-    @Autowired
-    CarService carService;
 
     //Add car
     @PostMapping

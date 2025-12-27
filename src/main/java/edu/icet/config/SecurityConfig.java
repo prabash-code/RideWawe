@@ -4,13 +4,11 @@ import edu.icet.security.JwtFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
-import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -25,7 +23,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 @Configuration
 @EnableWebSecurity
-@EnableJpaAuditing
+
 public class SecurityConfig {
 
 
@@ -38,11 +36,9 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http)
             throws Exception {
-
         http
                 .csrf(csrf -> csrf.disable())
                 .cors(Customizer.withDefaults())
-
 
                 .sessionManagement(session ->
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
@@ -50,23 +46,19 @@ public class SecurityConfig {
 
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
-                                "/user-control/register",
-                                "/user-control/login"
+                                "/user-control/**"
+
                         ).permitAll()
-                        .requestMatchers("/cars/**").hasRole("USER")
-                        .requestMatchers("/cars/**").hasRole("ADMIN")
+                        .requestMatchers("/cars/**").hasAnyRole("USER", "ADMIN")
                         .anyRequest().authenticated()
                 )
-
                 .authenticationProvider(authenticationProvider())
-
                 .addFilterBefore(
                         jwtFilter,
                         UsernamePasswordAuthenticationFilter.class
                 );
         return http.build();
     }
-
 
     @Bean
     public AuthenticationProvider authenticationProvider() {
@@ -76,7 +68,6 @@ public class SecurityConfig {
         provider.setUserDetailsService(userDetailsService);
         return provider;
     }
-
 
     @Bean
     public AuthenticationManager authenticationManager(

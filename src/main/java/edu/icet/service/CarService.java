@@ -22,5 +22,5 @@ public interface CarService {
 
     List<CarResponse> getAvailableCars(LocalDate startDate, LocalDate endDate);
 
-    List<CarResponse> searchCars(String brand, CarType car, double minPrice, double maxPrice);
+    List<CarResponse> searchCars(String brand, CarType car, Double minPrice, Double maxPrice);
 }
