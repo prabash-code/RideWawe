@@ -22,14 +22,13 @@ public class JwtService {
     @Value("${jwt.expiration:3600000}")
     private long jwtExpiration;
 
-    @Value("${jwt.refresh-expiration}")
-    private long refreshExpiration;
 
     private SecretKey getSigningKey() {
         byte[] keyBytes = Decoders.BASE64.decode(secretKey);
         return Keys.hmacShaKeyFor(keyBytes);
     }
 
+    //generate refresh token
     public String generateToken(String email) {
         return Jwts
                 .builder()
@@ -41,11 +40,17 @@ public class JwtService {
     }
 
     private Claims extractAllClaims(String token) {
-        return Jwts.parser()
-                .setSigningKey(getSigningKey())
-                .build()
-                .parseClaimsJws(token)
-                .getBody();
+
+        try {
+            return Jwts.parserBuilder()
+                    .setSigningKey(getSigningKey())
+                    .build()
+                    .parseClaimsJws(token)
+                    .getBody();
+
+        } catch (Exception e) {
+             throw e;
+        }
     }
 
     public String extractUserName(String token) {

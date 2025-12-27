@@ -13,10 +13,8 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 @CrossOrigin(origins = "http://localhost:5173")
 
-
 public class AuthController {
-    @Autowired
-    private AuthService service;
+    private final AuthService service;
 
     @PostMapping("/register")
     public UserResponse register(@RequestBody RegistrationRequest user){
