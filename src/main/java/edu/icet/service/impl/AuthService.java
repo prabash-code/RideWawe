@@ -15,6 +15,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 public class AuthService {
@@ -57,9 +59,14 @@ public class AuthService {
     }
 
     public String verify(LoginRequest user) {
+        UserEntity userByEmail = userRepository.findUserByEmail(user.getEmail()).orElse(null);
+        if(userByEmail==null){
+            return "fail";
+        }
+
         Authentication authentication=manager.authenticate(new UsernamePasswordAuthenticationToken(user.getEmail(),user.getPassword()));
         if(authentication.isAuthenticated())
-            return jwtService.generateToken(user.getEmail());
+            return jwtService.generateToken(user.getEmail(),userByEmail.getRole());
 
         return "fail";
 

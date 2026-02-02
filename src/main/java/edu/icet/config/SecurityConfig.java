@@ -42,7 +42,9 @@ public class SecurityConfig {
                 )
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
-                                "/user-control/**"
+                                "/user-control/**",
+                                "/auth/register",
+                                "/auth/login"
 
                         ).permitAll()
                         .requestMatchers("/cars/**").hasAnyRole("USER", "ADMIN")

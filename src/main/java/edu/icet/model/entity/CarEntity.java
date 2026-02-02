@@ -52,8 +52,11 @@ public class CarEntity {
     @Column(length = 1000)
     private String description;
 
-    @Column(nullable = false)
-    private String imageUrl;
+    @Lob
+    @Column(name="image",columnDefinition = "LONGBLOB")
+    private byte[] image;
+
+    private String imageType;
 
 
     @CreatedDate

@@ -6,8 +6,6 @@ import edu.icet.model.dto.response.CarResponse;
 import edu.icet.model.entity.CarType;
 import edu.icet.service.CarService;
 import lombok.RequiredArgsConstructor;
-//import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -18,6 +16,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CarController {
     private final CarService carService;
+    private final ImageService imageService;
     List<CarResponse> cars;
 
 
@@ -47,8 +46,7 @@ public class CarController {
         return carService.updateCarDetails(id, car);
     }
 
-
-    //delete car
+     //delete car
     @DeleteMapping("/{id}")
     public void deleteCar(@PathVariable Long id) {
         carService.deleteCar(id);

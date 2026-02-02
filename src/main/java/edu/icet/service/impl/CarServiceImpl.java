@@ -11,7 +11,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -42,9 +44,9 @@ public class CarServiceImpl implements CarService {
         carEntity.setSeatingCapacity(car.getSeatingCapacity());
         carEntity.setDailyRentalPrice(car.getDailyRentalPrice());
         carEntity.setDescription(car.getDescription());
-        carEntity.setImageUrl(car.getImageUrl());
         carEntity.setStatus(CarStatus.AVAILABLE);
 
+        handleImageUpload(car.getImage(),carEntity);
         carRepository.save(carEntity);
 
         return new CarResponse(carEntity.getId(),
@@ -57,7 +59,8 @@ public class CarServiceImpl implements CarService {
                 carEntity.getDailyRentalPrice(),
                 carEntity.getStatus(),
                 carEntity.getDescription(),
-                carEntity.getImageUrl(),
+                carEntity.getImage(),
+                carEntity.getImageType(),
                 carEntity.getCreateDate(),
                 carEntity.getUpdateDate()
         );
@@ -81,7 +84,8 @@ public class CarServiceImpl implements CarService {
                     carEntity.getDailyRentalPrice(),
                     carEntity.getStatus(),
                     carEntity.getDescription(),
-                    carEntity.getImageUrl(),
+                    carEntity.getImage(),
+                    carEntity.getImageType(),
                     carEntity.getCreateDate(),
                     carEntity.getUpdateDate()
             ));
@@ -103,7 +107,8 @@ public class CarServiceImpl implements CarService {
                 carEntity.getDailyRentalPrice(),
                 carEntity.getStatus(),
                 carEntity.getDescription(),
-                carEntity.getImageUrl(),
+                carEntity.getImage(),
+                carEntity.getImageType(),
                 carEntity.getCreateDate(),
                 carEntity.getUpdateDate());
     }
@@ -125,7 +130,11 @@ public class CarServiceImpl implements CarService {
         carEntity.setSeatingCapacity(car.getSeatingCapacity());
         carEntity.setDailyRentalPrice(car.getDailyRentalPrice());
         carEntity.setDescription(car.getDescription());
-        carEntity.setImageUrl(car.getImageUrl());
+
+        if(car.getImage()!=null && !car.getImage().isEmpty()){
+            handleImageUpload(car.getImage(),carEntity);
+        }
+
         carEntity.setStatus(CarStatus.AVAILABLE);
         carRepository.save(carEntity);
 
@@ -140,7 +149,8 @@ public class CarServiceImpl implements CarService {
                 carEntity.getDailyRentalPrice(),
                 carEntity.getStatus(),
                 carEntity.getDescription(),
-                carEntity.getImageUrl(),
+                carEntity.getImage(),
+                carEntity.getImageType(),
                 carEntity.getCreateDate(),
                 carEntity.getUpdateDate()
 
@@ -170,7 +180,8 @@ public class CarServiceImpl implements CarService {
                         carEntity.getDailyRentalPrice(),
                         carEntity.getStatus(),
                         carEntity.getDescription(),
-                        carEntity.getImageUrl(),
+                        carEntity.getImage(),
+                        carEntity.getImageType(),
                         carEntity.getCreateDate(),
                         carEntity.getUpdateDate()
                 ));
@@ -217,13 +228,44 @@ public class CarServiceImpl implements CarService {
                             carEntity.getDailyRentalPrice(),
                             carEntity.getStatus(),
                             carEntity.getDescription(),
-                            carEntity.getImageUrl(),
+                            carEntity.getImage(),
+                            carEntity.getImageType(),
                             carEntity.getCreateDate(),
                             carEntity.getUpdateDate()
                     ))
                     .toList();
         }
 
+    private void handleImageUpload(MultipartFile imageFile,CarEntity carEntity){
+        if(imageFile!=null && !imageFile.isEmpty()){
 
-
+                validateImageFile(imageFile);
+            try {
+                carEntity.setImage(imageFile.getBytes());
+                carEntity.setType(CarType.valueOf(imageFile.getContentType()));
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
     }
+
+    private void validateImageFile(MultipartFile file) {
+        long maxSize = 10 * 1024 * 1024;
+        if (file.getSize() > maxSize) {
+            throw new RuntimeException("Image file size must not exceed 10MB");
+        }
+
+        // Check file type
+        String contentType = file.getContentType();
+        if (contentType == null || !contentType.startsWith("image/")) {
+            throw new RuntimeException("Only image files are allowed");
+        }
+
+        // Optionally check for specific image types
+        List<String> allowedTypes = List.of("image/jpeg", "image/png", "image/jpg", "image/webp");
+        if (!allowedTypes.contains(contentType.toLowerCase())) {
+            throw new RuntimeException("Only JPEG, PNG, and WEBP images are allowed");
+        }
+    }
+
+}
