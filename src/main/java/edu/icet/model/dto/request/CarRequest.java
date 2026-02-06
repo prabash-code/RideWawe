@@ -39,7 +39,7 @@ public class CarRequest {
     private Integer year;
 
     @NotNull(message = "Fuel type is required")
-    private FuelType fuelType;
+    private String fuelType;
 
     @NotNull(message = "Seating capacity is required")
     @Min(value = 2, message = "Minimum seating is 2")
@@ -52,6 +52,7 @@ public class CarRequest {
 
     @Size(max = 1000, message = "Description max length is 1000")
     private String description;
+
 
     private MultipartFile image;
 }

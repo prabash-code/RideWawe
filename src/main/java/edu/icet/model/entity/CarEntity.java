@@ -29,6 +29,10 @@ public class CarEntity {
     @Column(nullable = false)
     private CarType type;
 
+
+    @Column(nullable = false)
+    private String model;
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private FuelType fuelType;

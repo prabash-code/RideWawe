@@ -5,6 +5,7 @@ import edu.icet.model.dto.response.CarResponse;
 import edu.icet.model.entity.CarEntity;
 import edu.icet.model.entity.CarStatus;
 import edu.icet.model.entity.CarType;
+import edu.icet.model.entity.FuelType;
 import edu.icet.repository.CarRepository;
 import edu.icet.service.CarService;
 import lombok.RequiredArgsConstructor;
@@ -25,45 +26,61 @@ public class CarServiceImpl implements CarService {
 
     @Override
     public CarResponse addNewCar(CarRequest car) {
+try {
+    if (car.getType() == null || car.getType().isBlank()) {
+        throw new RuntimeException("Car type is required");
+    }
 
-        if (car.getType() == null || car.getType().isBlank()) {
-            throw new RuntimeException("Car type is required");
-        }
+    CarEntity carEntity = new CarEntity();
 
-        CarEntity carEntity = new CarEntity();
+    carEntity.setBrand(car.getBrand());
+    try {
+        carEntity.setType(CarType.valueOf(car.getType().toUpperCase()));
+    } catch (IllegalArgumentException e) {
+        throw new RuntimeException("Invalid Car Type " + car.getType());
+    }
 
-        carEntity.setBrand(car.getBrand());
-        try {
-            carEntity.setType(CarType.valueOf(car.getType().toUpperCase()));
-        } catch (IllegalArgumentException e) {
-            throw new RuntimeException("Invalid Car Type " + car.getType());
-        }
-        carEntity.setFuelType(car.getFuelType());
-        carEntity.setRegistrationNumber(car.getRegistrationNumber());
-        carEntity.setYear(car.getYear());
-        carEntity.setSeatingCapacity(car.getSeatingCapacity());
-        carEntity.setDailyRentalPrice(car.getDailyRentalPrice());
-        carEntity.setDescription(car.getDescription());
-        carEntity.setStatus(CarStatus.AVAILABLE);
+    try {
+        carEntity.setFuelType(FuelType.valueOf(car.getFuelType().toUpperCase()));
+    } catch (IllegalArgumentException e) {
+        throw new RuntimeException("Invalid Fuel Type " + car.getFuelType());
+    }
 
-        handleImageUpload(car.getImage(),carEntity);
-        carRepository.save(carEntity);
+    carEntity.setRegistrationNumber(car.getRegistrationNumber());
+    carEntity.setYear(Integer.valueOf(car.getYear()));
+    carEntity.setSeatingCapacity(Integer.valueOf(car.getSeatingCapacity()));
+    carEntity.setDailyRentalPrice(car.getDailyRentalPrice());
+    carEntity.setDescription(car.getDescription());
 
-        return new CarResponse(carEntity.getId(),
-                carEntity.getBrand(),
-                carEntity.getType(),
-                carEntity.getFuelType(),
-                carEntity.getRegistrationNumber(),
-                carEntity.getYear(),
-                carEntity.getSeatingCapacity(),
-                carEntity.getDailyRentalPrice(),
-                carEntity.getStatus(),
-                carEntity.getDescription(),
-                carEntity.getImage(),
-                carEntity.getImageType(),
-                carEntity.getCreateDate(),
-                carEntity.getUpdateDate()
-        );
+    try {
+        carEntity.setStatus(CarStatus.valueOf(car.getStatus().toUpperCase()));
+    } catch (IllegalArgumentException e) {
+        throw new RuntimeException("Invalid Status " + car.getStatus());
+    }
+
+    handleImageUpload(car.getImage(), carEntity);
+    carRepository.save(carEntity);
+
+    return new CarResponse(carEntity.getId(),
+            carEntity.getBrand(),
+            carEntity.getModel(),
+            carEntity.getType(),
+            carEntity.getFuelType(),
+            carEntity.getRegistrationNumber(),
+            carEntity.getYear(),
+            carEntity.getSeatingCapacity(),
+            carEntity.getDailyRentalPrice(),
+            carEntity.getStatus(),
+            carEntity.getDescription(),
+            carEntity.getImage(),
+            carEntity.getImageType(),
+            carEntity.getCreateDate(),
+            carEntity.getUpdateDate()
+    );
+} catch (Exception e) {
+    e.printStackTrace();
+    return null;
+}
     }
 
     @Override
@@ -76,6 +93,7 @@ public class CarServiceImpl implements CarService {
             carList.add(new CarResponse(
                     carEntity.getId(),
                     carEntity.getBrand(),
+                    carEntity.getModel(),
                     carEntity.getType(),
                     carEntity.getFuelType(),
                     carEntity.getRegistrationNumber(),
@@ -99,6 +117,7 @@ public class CarServiceImpl implements CarService {
                 .orElseThrow(() -> new RuntimeException("Car not found with id " + id));
         return new CarResponse(carEntity.getId(),
                 carEntity.getBrand(),
+                carEntity.getModel(),
                 carEntity.getType(),
                 carEntity.getFuelType(),
                 carEntity.getRegistrationNumber(),
@@ -122,25 +141,34 @@ public class CarServiceImpl implements CarService {
         try {
             carEntity.setType(CarType.valueOf(car.getType().toUpperCase()));
         } catch (IllegalArgumentException e) {
-            throw new RuntimeException("Invalid car type: " + car.getType());
+            throw new RuntimeException("Invalid Car Type " + car.getType());
         }
-        carEntity.setFuelType(car.getFuelType());
+
+        try {
+            carEntity.setFuelType(FuelType.valueOf(car.getFuelType().toUpperCase()));
+        } catch (IllegalArgumentException e) {
+            throw new RuntimeException("Invalid Fuel Type " + car.getFuelType());
+        }
+
         carEntity.setRegistrationNumber(car.getRegistrationNumber());
-        carEntity.setYear(car.getYear());
-        carEntity.setSeatingCapacity(car.getSeatingCapacity());
+        carEntity.setYear(Integer.valueOf(car.getYear()));
+        carEntity.setSeatingCapacity(Integer.valueOf(car.getSeatingCapacity()));
         carEntity.setDailyRentalPrice(car.getDailyRentalPrice());
         carEntity.setDescription(car.getDescription());
 
-        if(car.getImage()!=null && !car.getImage().isEmpty()){
-            handleImageUpload(car.getImage(),carEntity);
+        try {
+            carEntity.setStatus(CarStatus.valueOf(car.getStatus().toUpperCase()));
+        } catch (IllegalArgumentException e) {
+            throw new RuntimeException("Invalid Status " + car.getStatus());
         }
 
-        carEntity.setStatus(CarStatus.AVAILABLE);
+        handleImageUpload(car.getImage(),carEntity);
         carRepository.save(carEntity);
 
         return new CarResponse(
                 carEntity.getId(),
                 carEntity.getBrand(),
+                carEntity.getModel(),
                 carEntity.getType(),
                 carEntity.getFuelType(),
                 carEntity.getRegistrationNumber(),
@@ -172,6 +200,7 @@ public class CarServiceImpl implements CarService {
                 available.add(new CarResponse(
                         carEntity.getId(),
                         carEntity.getBrand(),
+                        carEntity.getModel(),
                         carEntity.getType(),
                         carEntity.getFuelType(),
                         carEntity.getRegistrationNumber(),
@@ -220,6 +249,7 @@ public class CarServiceImpl implements CarService {
                     .map(carEntity -> new CarResponse(
                             carEntity.getId(),
                             carEntity.getBrand(),
+                            carEntity.getModel(),
                             carEntity.getType(),
                             carEntity.getFuelType(),
                             carEntity.getRegistrationNumber(),
@@ -242,7 +272,7 @@ public class CarServiceImpl implements CarService {
                 validateImageFile(imageFile);
             try {
                 carEntity.setImage(imageFile.getBytes());
-                carEntity.setType(CarType.valueOf(imageFile.getContentType()));
+                carEntity.setImageType(imageFile.getContentType());
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }

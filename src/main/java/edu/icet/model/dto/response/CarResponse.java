@@ -19,6 +19,7 @@ import java.util.Base64;
 public class CarResponse {
     private Long id;
     private String brand;
+    private String model;
     private CarType type;
     private FuelType fuelType;
     private String registrationNumber;
@@ -34,12 +35,13 @@ public class CarResponse {
 
 
 
-            public CarResponse(Long id, String brand, CarType type, FuelType fuelType,
+            public CarResponse(Long id,String model, String brand, CarType type, FuelType fuelType,
                 String registrationNumber, Integer year, Integer seatingCapacity,
         double dailyRentalPrice, CarStatus status, String description,
         byte[] image, String imageType, LocalDateTime createDate,
                 LocalDateTime updateDate) {
             this.id = id;
+            this.model=model;
             this.brand = brand;
             this.type = type;
             this.fuelType = fuelType;

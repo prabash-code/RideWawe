@@ -16,13 +16,12 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CarController {
     private final CarService carService;
-    private final ImageService imageService;
     List<CarResponse> cars;
 
 
     //Add car
     @PostMapping
-    public CarResponse addCar(@RequestBody CarRequest car) {
+    public CarResponse addCar(@ModelAttribute CarRequest car) {
         return carService.addNewCar(car);
     }
 
@@ -42,7 +41,7 @@ public class CarController {
 
     //update car by id
     @PutMapping("/{id}")
-    public CarResponse updateCarDetails(@PathVariable Long id, @RequestBody CarRequest car) {
+    public CarResponse updateCarDetails(@PathVariable Long id, @ModelAttribute CarRequest car) {
         return carService.updateCarDetails(id, car);
     }
 
