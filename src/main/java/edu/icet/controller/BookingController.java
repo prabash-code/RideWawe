@@ -23,15 +23,7 @@ public class BookingController {
       return bookingServices.createNewBooking(booking);
     }
 
-    //get my bookings
-//    @GetMapping("/my-bookings")
-//    public List<BookingResponse> getMyBookings(
-//            @RequestParam Authentication authentication){
-//      return bookingServices.getMyBookings(authentication.getName());
-//
-//    }
-    //get all bookings
-
+//Get all bookings
     @GetMapping
     public List<BookingResponse> getAllBookings(){
       return bookingServices.getAllBookings();

@@ -22,7 +22,6 @@ public class BookingResponse {
     private LocalDateTime startDate;
     private LocalDateTime endDate;
     private double totalAmount;
-    private CarStatus status;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 }

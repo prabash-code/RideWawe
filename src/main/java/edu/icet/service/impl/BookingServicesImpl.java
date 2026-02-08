@@ -26,11 +26,18 @@ public class BookingServicesImpl implements BookingServices {
     public BookingResponse createNewBooking(BookingRequest booking) {
         BookingEntity bookingEntity = new BookingEntity();
 
-        bookingEntity.setId(booking.getId());
+        bookingEntity.setCarId(booking.getCarId());
+        bookingEntity.setCustomerId(booking.getCustomerId());
+        bookingEntity.setCustomerName(booking.getCustomerName());
+        bookingEntity.setCustomerEmail(booking.getCustomerEmail());
+        bookingEntity.setRegistrationNumber(booking.getRegistrationNumber());
+        bookingEntity.setPickupLocation(booking.getPickupLocation());
+        bookingEntity.setFinalLocation(booking.getFinalLocation());
+        bookingEntity.setTotalAmount(booking.getTotalAmount());
         bookingEntity.setStartDate(booking.getStartDate());
         bookingEntity.setEndDate(booking.getEndDate());
 
-
+        bookingRepository.save(bookingEntity);
         return new BookingResponse(
                 bookingEntity.getId(),
                 bookingEntity.getCustomerId(),
@@ -40,11 +47,12 @@ public class BookingServicesImpl implements BookingServices {
                 bookingEntity.getStartDate(),
                 bookingEntity.getEndDate(),
                 bookingEntity.getTotalAmount(),
-                bookingEntity.getStatus(),
                 bookingEntity.getCreatedAt(),
                 bookingEntity.getUpdatedAt()
         );
+
     }
+
 
     @Override
     public List<BookingResponse> getMyBookings(String email) {
@@ -66,7 +74,6 @@ public class BookingServicesImpl implements BookingServices {
                     bookingEntity.getStartDate(),
                     bookingEntity.getEndDate(),
                     bookingEntity.getTotalAmount(),
-                    bookingEntity.getStatus(),
                     bookingEntity.getCreatedAt(),
                     bookingEntity.getUpdatedAt()
             ));
@@ -89,7 +96,6 @@ public class BookingServicesImpl implements BookingServices {
                     booking.getStartDate(),
                     booking.getEndDate(),
                     booking.getTotalAmount(),
-                    booking.getStatus(),
                     booking.getCreatedAt(),
                     booking.getUpdatedAt()
             ));
@@ -111,7 +117,6 @@ public class BookingServicesImpl implements BookingServices {
                 bookingEntity.getStartDate(),
                 bookingEntity.getEndDate(),
                 bookingEntity.getTotalAmount(),
-                bookingEntity.getStatus(),
                 bookingEntity.getCreatedAt(),
                 bookingEntity.getUpdatedAt()
         );
@@ -122,7 +127,7 @@ public class BookingServicesImpl implements BookingServices {
         BookingEntity booking = bookingRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Booking not found"));
 
-        booking.setStatus(status);
+bookingRepository.save(booking);
 
         return new BookingResponse(
                 booking.getId(),
@@ -133,7 +138,6 @@ public class BookingServicesImpl implements BookingServices {
                 booking.getStartDate(),
                 booking.getEndDate(),
                 booking.getTotalAmount(),
-                booking.getStatus(),
                 booking.getCreatedAt(),
                 booking.getUpdatedAt()
         );

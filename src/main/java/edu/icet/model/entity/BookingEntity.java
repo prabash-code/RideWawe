@@ -22,6 +22,10 @@ public class BookingEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(nullable = false)
+    private Long carId;
+
     @Column(nullable = false)
     private Long customerId;
 
@@ -35,6 +39,12 @@ public class BookingEntity {
     private String registrationNumber;
 
     @Column(nullable = false)
+    private String pickupLocation;
+
+    @Column(nullable = false)
+    private String finalLocation;
+
+    @Column(nullable = false)
     private LocalDateTime startDate;
 
     @Column(nullable = false)
@@ -42,9 +52,6 @@ public class BookingEntity {
 
     @Column(nullable = false)
     private double totalAmount;
-
-    @Column(nullable = false)
-    private CarStatus status;
 
     @CreatedDate
     @Column(updatable = false)

@@ -8,7 +8,29 @@ import java.time.LocalDateTime;
 @Data
 public class BookingRequest {
     @NotNull
-    private Long id;
+    private Long carId;
+
+    @NotNull
+    private Long customerId;
+
+    @NotNull
+    private String customerName;
+
+    @NotNull
+    private String customerEmail;
+
+    @NotNull
+    private String registrationNumber;
+
+    @NotNull
+    private String pickupLocation;
+
+    @NotNull
+    private String finalLocation;
+
+    @NotNull
+    private double  totalAmount;
+
 
     @NotNull @Future
     private LocalDateTime startDate;
