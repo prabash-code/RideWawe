@@ -10,7 +10,7 @@ public class BookingRequest {
     @NotNull
     private Long carId;
 
-    @NotNull
+
     private Long customerId;
 
     @NotNull
@@ -37,4 +37,7 @@ public class BookingRequest {
 
     @NotNull @Future
     private LocalDateTime endDate;
+
+
+
 }

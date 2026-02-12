@@ -2,7 +2,6 @@ package edu.icet.service;
 
 import edu.icet.model.dto.request.BookingRequest;
 import edu.icet.model.dto.response.BookingResponse;
-import edu.icet.model.entity.CarStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,7 +16,7 @@ public interface BookingServices {
 
     BookingResponse getBookingById(Long id);
 
-    BookingResponse updateBooking(Long id, CarStatus status);
+    BookingResponse updateBooking(Long id, boolean status);
 
     void cancelBooking(Long id);
 }

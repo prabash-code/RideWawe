@@ -1,10 +1,10 @@
 package edu.icet.service.impl;
 
+import edu.icet.model.dto.response.UserResponse;
 import edu.icet.model.entity.UserEntity;
 import edu.icet.repository.UserRepository;
 import edu.icet.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -30,6 +30,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public void deleteUserById(Long id) {
         userRepository.deleteById(id);
+    }
+
+    @Override
+    public UserEntity findUserByEmail(String email) {
+       return userRepository.findUserByEmail(email).orElseThrow(() -> new RuntimeException("customer not found"));
     }
 
 

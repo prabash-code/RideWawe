@@ -1,6 +1,7 @@
 package edu.icet.model.dto.response;
 
 import edu.icet.model.entity.CarStatus;
+import edu.icet.model.entity.PaymentStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -24,4 +25,5 @@ public class BookingResponse {
     private double totalAmount;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+    private PaymentStatus paymentStatus;
 }

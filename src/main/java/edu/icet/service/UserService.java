@@ -1,5 +1,6 @@
 package edu.icet.service;
 
+import edu.icet.model.dto.response.UserResponse;
 import edu.icet.model.entity.UserEntity;
 
 import java.util.List;
@@ -11,4 +12,6 @@ public interface UserService {
     UserEntity findUserById(Long id);
 
     void deleteUserById(Long id);
+
+    UserEntity findUserByEmail(String email);
 }

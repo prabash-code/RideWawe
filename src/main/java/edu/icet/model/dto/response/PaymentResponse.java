@@ -1,7 +1,7 @@
 package edu.icet.model.dto.response;
 
 import edu.icet.model.entity.PaymentMethod;
-import edu.icet.model.entity.PaymentsType;
+import edu.icet.model.entity.PaymentStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -17,7 +17,7 @@ public class PaymentResponse {
     private Long id;
     private Long bookingId;
     private Double amount;
-    private PaymentsType type;
+    private PaymentStatus type;
     private PaymentMethod method;
     private LocalDateTime paymentDate;
 }

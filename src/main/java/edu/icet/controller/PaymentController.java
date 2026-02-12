@@ -10,6 +10,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/payments")
+@CrossOrigin(origins = "http://localhost:5173")
 public class PaymentController {
     @Autowired
     PaymentServices paymentServices;
@@ -27,7 +28,7 @@ public class PaymentController {
     }
 
     //get payment by id
-    @GetMapping("/{id}")
+    @GetMapping("id/{id}")
     public PaymentResponse getPaymentById(@PathVariable Long id){
        return paymentServices.getPaymentById(id);
     }

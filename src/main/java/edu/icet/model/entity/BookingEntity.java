@@ -26,7 +26,7 @@ public class BookingEntity {
     @Column(nullable = false)
     private Long carId;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private Long customerId;
 
     @Column(nullable = false)
@@ -59,6 +59,10 @@ public class BookingEntity {
 
     @UpdateTimestamp
     private LocalDateTime updatedAt;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name="payment_status")
+    private PaymentStatus paymentStatus;
 
 
 

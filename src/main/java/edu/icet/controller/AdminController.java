@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/admin")
@@ -19,6 +20,11 @@ public class AdminController {
     public List<UserEntity> getAllUsers(){
         return userService.getAllUsers();
 
+    }
+
+    @GetMapping("/email/{email}")
+    public UserEntity findUserByEmail(@PathVariable String email){
+        return userService.findUserByEmail(email);
     }
     @GetMapping("/{id}")
     public UserEntity findUserById(@PathVariable Long id){

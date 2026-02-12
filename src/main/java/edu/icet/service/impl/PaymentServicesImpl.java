@@ -2,20 +2,26 @@ package edu.icet.service.impl;
 
 import edu.icet.model.dto.request.PaymentRequest;
 import edu.icet.model.dto.response.PaymentResponse;
-import edu.icet.model.entity.PaymentEntity;
+import edu.icet.model.entity.*;
+import edu.icet.repository.BookingRepository;
+import edu.icet.repository.CarRepository;
 import edu.icet.repository.PaymentRepository;
 import edu.icet.service.PaymentServices;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class PaymentServicesImpl implements PaymentServices  {
     private final PaymentRepository paymentRepository;
+    private final BookingRepository bookingRepository;
+    private final CarRepository carRepository;
 
     //get all payments
     @Override
@@ -36,13 +42,28 @@ public class PaymentServicesImpl implements PaymentServices  {
         return list;
     }
 
-    //create payment
+
     @Override
     public PaymentResponse createNewPayment(PaymentRequest payment) {
-      PaymentEntity paymentEntity=new PaymentEntity();
 
-      paymentEntity.setMethod(payment.getMethod());
-      paymentEntity.setBookingId(payment.getBookingId());
+       BookingEntity booking = bookingRepository.findById(payment.getBookingId()).orElseThrow(()->new RuntimeException("Booking not found"));
+       booking.setPaymentStatus(PaymentStatus.PAID);
+
+        PaymentEntity paymentEntity=new PaymentEntity();
+        bookingRepository.save(booking);
+
+        CarEntity carEntity = carRepository.findById(booking.getCarId()).orElseThrow(() -> new RuntimeException("Car is not found"));
+        carEntity.setStatus(CarStatus.RENTED);
+        carRepository.save(carEntity);
+
+
+        paymentEntity.setBookingId(payment.getBookingId());
+        paymentEntity.setMethod(PaymentMethod.valueOf(String.valueOf(payment.getMethod())));
+        paymentEntity.setAmount(payment.getAmount());
+        paymentEntity.setType(PaymentStatus.PAID);
+        paymentEntity.setPaymentDate(LocalDateTime.now());
+
+        paymentRepository.save(paymentEntity);
 
       return new PaymentResponse(
               paymentEntity.getId(),

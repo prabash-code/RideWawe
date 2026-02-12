@@ -27,9 +27,12 @@ public class PaymentEntity {
     private Double amount;
 
     @Column(nullable = false)
-    private PaymentsType type;
+    @Enumerated(EnumType.STRING)
+    private PaymentStatus type;
+
 
     @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private PaymentMethod method;
 
     @CreatedDate

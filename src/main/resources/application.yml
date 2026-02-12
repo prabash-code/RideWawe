@@ -13,10 +13,7 @@ spring:
       ddl-auto: update
     show-sql: true
 
-#  security:
-#    user:
-#      name: prabash
-#      password: 12345
+
 
 jwt:
   secret: QEYjUmVValqYNyNxdDh4L0E/RChHLUtiUGRTZ1ZrWWc=

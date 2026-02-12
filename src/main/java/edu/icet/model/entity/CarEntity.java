@@ -70,4 +70,6 @@ public class CarEntity {
     @UpdateTimestamp
     private LocalDateTime updateDate;
 
+
+
 }

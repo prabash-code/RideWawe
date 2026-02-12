@@ -14,6 +14,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/bookings")
 @RequiredArgsConstructor
+@CrossOrigin(origins = "http://localhost:5173")
 public class BookingController {
   private final  BookingServices bookingServices;
 
@@ -36,11 +37,16 @@ public class BookingController {
       return bookingServices.getBookingById(id);
     }
 
+    @GetMapping("/email/{email}")
+    public List<BookingResponse> getBookingsByEmail(@PathVariable String email){
+      return bookingServices.getMyBookings(email);
+    }
+
     //update bookings status
 
-    @PatchMapping("/{id}")
-    public BookingResponse updateBooking(@PathVariable Long id, @RequestParam CarStatus status){
-      return bookingServices.updateBooking(id,status);
+    @PutMapping("/{id}/payment")
+    public BookingResponse updateBooking(@PathVariable Long id, @RequestParam boolean success){
+      return bookingServices.updateBooking(id,success);
     }
 
     //delete bookings

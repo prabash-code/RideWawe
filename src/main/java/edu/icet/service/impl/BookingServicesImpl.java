@@ -4,6 +4,7 @@ import edu.icet.model.dto.request.BookingRequest;
 import edu.icet.model.dto.response.BookingResponse;
 import edu.icet.model.entity.BookingEntity;
 import edu.icet.model.entity.CarStatus;
+import edu.icet.model.entity.PaymentStatus;
 import edu.icet.model.entity.UserEntity;
 import edu.icet.repository.BookingRepository;
 import edu.icet.repository.UserRepository;
@@ -36,6 +37,7 @@ public class BookingServicesImpl implements BookingServices {
         bookingEntity.setTotalAmount(booking.getTotalAmount());
         bookingEntity.setStartDate(booking.getStartDate());
         bookingEntity.setEndDate(booking.getEndDate());
+        bookingEntity.setPaymentStatus(PaymentStatus.PENDING);
 
         bookingRepository.save(bookingEntity);
         return new BookingResponse(
@@ -48,7 +50,9 @@ public class BookingServicesImpl implements BookingServices {
                 bookingEntity.getEndDate(),
                 bookingEntity.getTotalAmount(),
                 bookingEntity.getCreatedAt(),
-                bookingEntity.getUpdatedAt()
+                bookingEntity.getUpdatedAt(),
+                bookingEntity.getPaymentStatus()
+
         );
 
     }
@@ -75,7 +79,8 @@ public class BookingServicesImpl implements BookingServices {
                     bookingEntity.getEndDate(),
                     bookingEntity.getTotalAmount(),
                     bookingEntity.getCreatedAt(),
-                    bookingEntity.getUpdatedAt()
+                    bookingEntity.getUpdatedAt(),
+                    bookingEntity.getPaymentStatus()
             ));
         }
         return myList;
@@ -97,7 +102,9 @@ public class BookingServicesImpl implements BookingServices {
                     booking.getEndDate(),
                     booking.getTotalAmount(),
                     booking.getCreatedAt(),
-                    booking.getUpdatedAt()
+                    booking.getUpdatedAt(),
+                    booking.getPaymentStatus()
+
             ));
         }
         return bookingsList;
@@ -118,14 +125,20 @@ public class BookingServicesImpl implements BookingServices {
                 bookingEntity.getEndDate(),
                 bookingEntity.getTotalAmount(),
                 bookingEntity.getCreatedAt(),
-                bookingEntity.getUpdatedAt()
+                bookingEntity.getUpdatedAt(),
+                bookingEntity.getPaymentStatus()
         );
     }
 
     @Override
-    public BookingResponse updateBooking(Long id, CarStatus status) {
+    public BookingResponse updateBooking(Long id,boolean success) {
         BookingEntity booking = bookingRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Booking not found"));
+        if(success){
+            booking.setPaymentStatus(PaymentStatus.PAID);
+        }else{
+            booking.setPaymentStatus(PaymentStatus.FAIL);
+        }
 
 bookingRepository.save(booking);
 
@@ -139,7 +152,8 @@ bookingRepository.save(booking);
                 booking.getEndDate(),
                 booking.getTotalAmount(),
                 booking.getCreatedAt(),
-                booking.getUpdatedAt()
+                booking.getUpdatedAt(),
+                booking.getPaymentStatus()
         );
     }
 

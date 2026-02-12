@@ -17,4 +17,11 @@ public class PaymentRequest {
 
     @NotNull
     private PaymentMethod method;
+
+    @NotNull
+    private double amount;
+
+
+
+
 }
