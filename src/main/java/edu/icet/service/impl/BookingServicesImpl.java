@@ -66,7 +66,7 @@ public class BookingServicesImpl implements BookingServices {
 
         Long userId = userEntity.getUserId();
 
-        List<BookingEntity> booksEntity = bookingRepository.findAllById(Collections.singleton(userId));
+        List<BookingEntity> booksEntity = bookingRepository.findByCustomerId(userId);
 
         for (BookingEntity bookingEntity : booksEntity) {
             myList.add(new BookingResponse(

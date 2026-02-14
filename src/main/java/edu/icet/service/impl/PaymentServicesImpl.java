@@ -91,17 +91,21 @@ public class PaymentServicesImpl implements PaymentServices  {
     }
 
     @Override
-    public PaymentResponse getPaymentByBookingId(Long bookingId) {
-        PaymentEntity paymentEntity=paymentRepository.getPaymentByBookingId(bookingId)
-                .orElseThrow(()->new RuntimeException("No matching Booking Id"));
+    public List<PaymentResponse> getPaymentByBookingId(Long bookingId) {
 
-        return new PaymentResponse(
-                paymentEntity.getId(),
-                paymentEntity.getBookingId(),
-                paymentEntity.getAmount(),
-                paymentEntity.getType(),
-                paymentEntity.getMethod(),
-                paymentEntity.getPaymentDate()
-        );
+        List<PaymentEntity> payments = paymentRepository.findByBookingId(bookingId);
+
+        return payments.stream()
+                .map(p -> new PaymentResponse(
+                        p.getId(),
+                        p.getBookingId(),
+                        p.getAmount(),
+                        p.getType(),
+                        p.getMethod(),
+                        p.getPaymentDate()
+                ))
+                .toList();
     }
+
+
 }

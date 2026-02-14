@@ -2,6 +2,7 @@ package edu.icet.service;
 
 import edu.icet.model.dto.request.PaymentRequest;
 import edu.icet.model.dto.response.PaymentResponse;
+import edu.icet.model.entity.PaymentEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,5 +15,6 @@ public interface PaymentServices {
 
     PaymentResponse getPaymentById(Long id);
 
-    PaymentResponse getPaymentByBookingId(Long bookingId);
+    List<PaymentResponse> getPaymentByBookingId(Long bookingId);
+
 }

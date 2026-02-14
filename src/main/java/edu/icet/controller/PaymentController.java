@@ -34,8 +34,8 @@ public class PaymentController {
     }
 
     //get payment by booking id
-    @GetMapping("/{bookingId}")
-    public PaymentResponse getPaymentByBookingId(@PathVariable Long bookingId){
+    @GetMapping("booking/{bookingId}")
+    public List<PaymentResponse> getPaymentByBookingId(@PathVariable Long bookingId){
         return paymentServices.getPaymentByBookingId(bookingId);
     }
 }
