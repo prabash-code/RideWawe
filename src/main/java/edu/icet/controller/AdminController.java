@@ -4,6 +4,7 @@ import edu.icet.model.dto.response.UserResponse;
 import edu.icet.model.entity.UserEntity;
 import edu.icet.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -22,10 +23,12 @@ public class AdminController {
 
     }
 
-    @GetMapping("/email/{email}")
-    public UserEntity findUserByEmail(@PathVariable String email){
+    @GetMapping("/email")
+    public UserEntity findUserByEmail(Authentication authentication){
+        String email = authentication.getName();
         return userService.findUserByEmail(email);
     }
+
     @GetMapping("/{id}")
     public UserEntity findUserById(@PathVariable Long id){
         return userService.findUserById(id);

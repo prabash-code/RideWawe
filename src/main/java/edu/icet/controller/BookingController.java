@@ -7,6 +7,7 @@ import edu.icet.service.BookingServices;
 import lombok.RequiredArgsConstructor;
 //import org.springframework.beans.factory.annotation.Autowired;
 //import org.springframework.security.core.Authentication;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -37,8 +38,14 @@ public class BookingController {
       return bookingServices.getBookingById(id);
     }
 
-    @GetMapping("/email/{email}")
-    public List<BookingResponse> getBookingsByEmail(@PathVariable String email){
+    @GetMapping("/email")
+    public List<BookingResponse> getBookingsByEmail(Authentication authentication){
+        if(authentication == null){
+            System.out.println("AUTH NULL");
+            return List.of();
+        }
+
+      String email=authentication.getName();
       return bookingServices.getMyBookings(email);
     }
 

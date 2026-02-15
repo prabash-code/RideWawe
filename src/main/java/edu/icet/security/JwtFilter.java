@@ -33,21 +33,32 @@ public class JwtFilter extends OncePerRequestFilter {
         String token = null;
         String username = null;
 
-        String path = request.getServletPath();
-        if (path.startsWith("/bookings") || path.startsWith("/auth")) {
-            filterChain.doFilter(request, response);
-            return;
-        }
+//        String path = request.getServletPath();
+//        if (path.startsWith("/bookings") || path.startsWith("/auth")) {
+//            filterChain.doFilter(request, response);
+//            return;
+//        }
         String method = request.getMethod();
 
-        if (request.getServletPath().startsWith("/payments")) {
+//        if (request.getServletPath().startsWith("/payments")) {
+//            filterChain.doFilter(request, response);
+//            return;
+//        }
+
+        String path = request.getServletPath();
+        String method1 = request.getMethod();
+
+        if (path.equals("/user-control/register") ||
+                path.equals("/user-control/login") ||
+                (method1.equals("GET") && path.startsWith("/cars"))) {
+
             filterChain.doFilter(request, response);
             return;
         }
 
         if (path.equals("/user-control/register") ||
                 path.equals("/user-control/login") ||
-        (method.equals("GET") && path.startsWith("/cars")))
+        (method1.equals("GET") && path.startsWith("/cars")))
         {
 
             filterChain.doFilter(request, response);
