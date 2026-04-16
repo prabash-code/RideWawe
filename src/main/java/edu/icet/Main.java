@@ -2,13 +2,19 @@ package edu.icet;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
+import io.github.cdimascio.dotenv.Dotenv;
 
-//TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
-// click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 @SpringBootApplication
-public class Main {
+@EnableJpaAuditing
+public class  Main {
     public static void main(String[] args) {
-        SpringApplication.run(Main.class);
+       Dotenv dotenv=Dotenv.configure().ignoreIfMissing().load();
+        dotenv.entries().forEach(entry ->
+                System.setProperty(entry.getKey(), entry.getValue())
+        );
+
+        SpringApplication.run(Main.class,args);
 
 
     }

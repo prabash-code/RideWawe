@@ -1,0 +1,79 @@
+package edu.icet.controller;
+
+
+import edu.icet.model.dto.request.CarRequest;
+import edu.icet.model.dto.response.CarResponse;
+import edu.icet.model.entity.CarType;
+import edu.icet.service.CarService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDate;
+import java.util.List;
+
+@CrossOrigin(origins = "http://localhost:5173")
+@RestController
+@RequestMapping("/cars")
+@RequiredArgsConstructor
+public class CarController {
+    private final CarService carService;
+    List<CarResponse> cars;
+
+
+    //Add car
+    @PostMapping
+    public CarResponse addCar(@ModelAttribute CarRequest car) {
+        return carService.addNewCar(car);
+    }
+
+    //Get all Cars
+    @GetMapping
+    public List<CarResponse> getAllCars() {
+        return carService.getAllCars();
+    }
+
+
+    //search car by id
+    @GetMapping("/{id}")
+    public CarResponse getCarById(@PathVariable Long id) {
+        return carService.searchCarById(id);
+
+    }
+
+    //update car by id
+    @PutMapping("/{id}")
+    public CarResponse updateCarDetails(@PathVariable Long id, @ModelAttribute CarRequest car) {
+        return carService.updateCarDetails(id, car);
+    }
+
+    //update car after rate
+    @PutMapping("rates/{id}")
+    public CarResponse updateRatings(@PathVariable Long id,@RequestParam int rating){
+        return carService.updateRatings(id,rating);
+    }
+
+    //delete car
+    @DeleteMapping("/{id}")
+    public void deleteCar(@PathVariable Long id) {
+        carService.deleteCar(id);
+    }
+
+    //availability of cars
+    @GetMapping("/available")
+    public List<CarResponse> getAvailableCars(@RequestParam(required = false) LocalDate startDate,
+                                              @RequestParam(required = false) LocalDate endDate
+    ) {
+        return carService.getAvailableCars(startDate, endDate);
+    }
+
+    //search cars
+    @GetMapping("/search")
+    public List<CarResponse> searchCar(@RequestParam(required = false) String brand,
+                                       @RequestParam(required = false) CarType car,
+                                       @RequestParam(required = false) double minPrice,
+                                       @RequestParam(required = false) double maxPrice
+    ) {
+        return carService.searchCars(brand, car, minPrice, maxPrice);
+    }
+
+}
