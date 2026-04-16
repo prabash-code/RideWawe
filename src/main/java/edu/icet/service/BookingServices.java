@@ -8,7 +8,7 @@ import java.util.List;
 
 @Service
 public interface BookingServices {
-    BookingResponse createNewBooking(BookingRequest booking);
+    BookingResponse createNewBooking(BookingRequest booking,String email);
 
     List<BookingResponse> getMyBookings(String email);
 

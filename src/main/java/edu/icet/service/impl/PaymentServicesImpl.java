@@ -44,7 +44,7 @@ public class PaymentServicesImpl implements PaymentServices  {
 
 
     @Override
-    public PaymentResponse createNewPayment(PaymentRequest payment) {
+    public PaymentResponse createNewPayment(PaymentRequest payment,String email) {
 
        BookingEntity booking = bookingRepository.findById(payment.getBookingId()).orElseThrow(()->new RuntimeException("Booking not found"));
        booking.setPaymentStatus(PaymentStatus.PAID);

@@ -24,11 +24,16 @@ public class BookingServicesImpl implements BookingServices {
     private final UserRepository userRepository;
 
     @Override
-    public BookingResponse createNewBooking(BookingRequest booking) {
+    public BookingResponse createNewBooking(BookingRequest booking,String email) {
         BookingEntity bookingEntity = new BookingEntity();
 
+        UserEntity userEntity = userRepository.findUserByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User Cannot find "));
+
+        Long userId = userEntity.getUserId();
+
         bookingEntity.setCarId(booking.getCarId());
-        bookingEntity.setCustomerId(booking.getCustomerId());
+        bookingEntity.setCustomerId(userId);
         bookingEntity.setCustomerName(booking.getCustomerName());
         bookingEntity.setCustomerEmail(booking.getCustomerEmail());
         bookingEntity.setRegistrationNumber(booking.getRegistrationNumber());
@@ -42,6 +47,7 @@ public class BookingServicesImpl implements BookingServices {
         bookingRepository.save(bookingEntity);
         return new BookingResponse(
                 bookingEntity.getId(),
+                bookingEntity.getCarId(),
                 bookingEntity.getCustomerId(),
                 bookingEntity.getCustomerName(),
                 bookingEntity.getCustomerEmail(),
@@ -71,6 +77,7 @@ public class BookingServicesImpl implements BookingServices {
         for (BookingEntity bookingEntity : booksEntity) {
             myList.add(new BookingResponse(
                     bookingEntity.getId(),
+                    bookingEntity.getCarId(),
                     bookingEntity.getCustomerId(),
                     bookingEntity.getCustomerName(),
                     bookingEntity.getCustomerEmail(),
@@ -94,6 +101,7 @@ public class BookingServicesImpl implements BookingServices {
         for (BookingEntity booking : all) {
             bookingsList.add(new BookingResponse(
                     booking.getId(),
+                    booking.getCarId(),
                     booking.getCustomerId(),
                     booking.getCustomerName(),
                     booking.getCustomerEmail(),
@@ -117,6 +125,7 @@ public class BookingServicesImpl implements BookingServices {
 
         return new BookingResponse(
                 bookingEntity.getId(),
+                bookingEntity.getCarId(),
                 bookingEntity.getCustomerId(),
                 bookingEntity.getCustomerName(),
                 bookingEntity.getCustomerEmail(),
@@ -144,6 +153,7 @@ bookingRepository.save(booking);
 
         return new BookingResponse(
                 booking.getId(),
+                booking.getCarId(),
                 booking.getCustomerId(),
                 booking.getCustomerName(),
                 booking.getCustomerEmail(),

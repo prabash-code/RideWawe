@@ -10,6 +10,8 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
+import java.util.Map;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -57,11 +59,10 @@ public class CarEntity {
     private String description;
 
     @Lob
-    @Column(name="image",columnDefinition = "LONGBLOB")
+    @Column(name = "image", columnDefinition = "LONGBLOB")
     private byte[] image;
 
     private String imageType;
-
 
     @CreatedDate
     @Column(updatable = false)
@@ -69,6 +70,12 @@ public class CarEntity {
 
     @UpdateTimestamp
     private LocalDateTime updateDate;
+
+    @Column(nullable = false)
+    private Double ratingAverage=0.0;
+
+    @Column(nullable = false)
+    private Integer ratingCount=0;
 
 
 

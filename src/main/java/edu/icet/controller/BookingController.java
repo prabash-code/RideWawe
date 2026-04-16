@@ -21,9 +21,18 @@ public class BookingController {
 
   //create new booking
   @PostMapping
-    public BookingResponse createBooking(@RequestBody BookingRequest booking){
-      return bookingServices.createNewBooking(booking);
-    }
+  public BookingResponse createBooking(
+          @RequestBody BookingRequest booking,
+          Authentication authentication) {
+
+      if(authentication == null){
+          throw new RuntimeException("User not authenticated");
+      }
+
+      String email = authentication.getName();
+
+      return bookingServices.createNewBooking(booking, email);
+  }
 
 //Get all bookings
     @GetMapping
@@ -55,6 +64,7 @@ public class BookingController {
     public BookingResponse updateBooking(@PathVariable Long id, @RequestParam boolean success){
       return bookingServices.updateBooking(id,success);
     }
+
 
     //delete bookings
     @DeleteMapping("/{id}")

@@ -4,6 +4,7 @@ import edu.icet.model.dto.request.PaymentRequest;
 import edu.icet.model.dto.response.PaymentResponse;
 import edu.icet.service.PaymentServices;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,8 +18,9 @@ public class PaymentController {
 
     //create new payments
     @PostMapping
-    public PaymentResponse createPayment(@RequestBody PaymentRequest payment){
-       return paymentServices.createNewPayment(payment);
+    public PaymentResponse createPayment(@RequestBody PaymentRequest payment, Authentication authentication){
+        String email = authentication.getName();
+       return paymentServices.createNewPayment(payment,email);
     }
 
     //get all payments

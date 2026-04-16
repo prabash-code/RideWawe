@@ -11,7 +11,7 @@ import java.util.List;
 public interface PaymentServices {
         List<PaymentResponse> getAllPayments();
 
-    PaymentResponse createNewPayment(PaymentRequest payment);
+    PaymentResponse createNewPayment(PaymentRequest payment,String email);
 
     PaymentResponse getPaymentById(Long id);
 

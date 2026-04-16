@@ -30,74 +30,45 @@ public class JwtFilter extends OncePerRequestFilter {
     ) throws ServletException, IOException {
 
         String authHeader = request.getHeader("Authorization");
-        String token = null;
-        String username = null;
 
-//        String path = request.getServletPath();
-//        if (path.startsWith("/bookings") || path.startsWith("/auth")) {
-//            filterChain.doFilter(request, response);
-//            return;
-//        }
-        String method = request.getMethod();
-
-//        if (request.getServletPath().startsWith("/payments")) {
-//            filterChain.doFilter(request, response);
-//            return;
-//        }
-
-        String path = request.getServletPath();
-        String method1 = request.getMethod();
-
-        if (path.equals("/user-control/register") ||
-                path.equals("/user-control/login") ||
-                (method1.equals("GET") && path.startsWith("/cars"))) {
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
 
             filterChain.doFilter(request, response);
             return;
         }
 
-        if (path.equals("/user-control/register") ||
-                path.equals("/user-control/login") ||
-        (method1.equals("GET") && path.startsWith("/cars")))
-        {
+        String token = authHeader.substring(7);
+        String username;
+
+        try {
+            username = jwtService.extractUserName(token);
+        } catch (Exception e) {
 
             filterChain.doFilter(request, response);
             return;
-        }
-
-        if (authHeader != null && authHeader.startsWith("Bearer ")) {
-            token = authHeader.substring(7);
-
-            try {
-                username = jwtService.extractUserName(token);
-            } catch (io.jsonwebtoken.ExpiredJwtException e) {
-                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                response.getWriter().write("JWT expired. Please login again.");
-                return;
-            } catch (Exception e) {
-                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                response.getWriter().write("Invalid JWT token");
-                return;
-            }
         }
 
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+
             UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+
             if (jwtService.validateToken(token, userDetails)) {
-                UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
-                        userDetails,
-                        null,
-                        userDetails.getAuthorities()
+
+                UsernamePasswordAuthenticationToken authToken =
+                        new UsernamePasswordAuthenticationToken(
+                                userDetails,
+                                null,
+                                userDetails.getAuthorities()
+                        );
+
+                authToken.setDetails(
+                        new WebAuthenticationDetailsSource().buildDetails(request)
                 );
 
-                authToken.setDetails(new WebAuthenticationDetailsSource()
-                        .buildDetails(request)
-                );
-
-                SecurityContextHolder.getContext()
-                        .setAuthentication(authToken);
+                SecurityContextHolder.getContext().setAuthentication(authToken);
             }
         }
+
         filterChain.doFilter(request, response);
     }
 }

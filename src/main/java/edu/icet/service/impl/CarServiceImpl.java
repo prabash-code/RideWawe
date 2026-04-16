@@ -26,61 +26,64 @@ public class CarServiceImpl implements CarService {
 
     @Override
     public CarResponse addNewCar(CarRequest car) {
-try {
-    if (car.getType() == null || car.getType().isBlank()) {
-        throw new RuntimeException("Car type is required");
-    }
+        try {
+            if (car.getType() == null || car.getType().isBlank()) {
+                throw new RuntimeException("Car type is required");
+            }
 
-    CarEntity carEntity = new CarEntity();
+            CarEntity carEntity = new CarEntity();
 
-    carEntity.setBrand(car.getBrand());
-    try {
-        carEntity.setType(CarType.valueOf(car.getType().toUpperCase()));
-    } catch (IllegalArgumentException e) {
-        throw new RuntimeException("Invalid Car Type " + car.getType());
-    }
+            carEntity.setBrand(car.getBrand());
+            try {
+                carEntity.setType(CarType.valueOf(car.getType().toUpperCase()));
+            } catch (IllegalArgumentException e) {
+                throw new RuntimeException("Invalid Car Type " + car.getType());
+            }
 
-    try {
-        carEntity.setFuelType(FuelType.valueOf(car.getFuelType().toUpperCase()));
-    } catch (IllegalArgumentException e) {
-        throw new RuntimeException("Invalid Fuel Type " + car.getFuelType());
-    }
+            try {
+                carEntity.setFuelType(FuelType.valueOf(car.getFuelType().toUpperCase()));
+            } catch (IllegalArgumentException e) {
+                throw new RuntimeException("Invalid Fuel Type " + car.getFuelType());
+            }
 
-    carEntity.setRegistrationNumber(car.getRegistrationNumber());
-    carEntity.setYear(Integer.valueOf(car.getYear()));
-    carEntity.setSeatingCapacity(Integer.valueOf(car.getSeatingCapacity()));
-    carEntity.setDailyRentalPrice(car.getDailyRentalPrice());
-    carEntity.setDescription(car.getDescription());
+            carEntity.setRegistrationNumber(car.getRegistrationNumber());
+            carEntity.setYear(Integer.valueOf(car.getYear()));
+            carEntity.setSeatingCapacity(Integer.valueOf(car.getSeatingCapacity()));
+            carEntity.setDailyRentalPrice(car.getDailyRentalPrice());
+            carEntity.setDescription(car.getDescription());
 
-    try {
-        carEntity.setStatus(CarStatus.valueOf(car.getStatus().toUpperCase()));
-    } catch (IllegalArgumentException e) {
-        throw new RuntimeException("Invalid Status " + car.getStatus());
-    }
 
-    handleImageUpload(car.getImage(), carEntity);
-    carRepository.save(carEntity);
+            try {
+                carEntity.setStatus(CarStatus.valueOf(car.getStatus().toUpperCase()));
+            } catch (IllegalArgumentException e) {
+                throw new RuntimeException("Invalid Status " + car.getStatus());
+            }
 
-    return new CarResponse(carEntity.getId(),
-            carEntity.getBrand(),
-            carEntity.getModel(),
-            carEntity.getType(),
-            carEntity.getFuelType(),
-            carEntity.getRegistrationNumber(),
-            carEntity.getYear(),
-            carEntity.getSeatingCapacity(),
-            carEntity.getDailyRentalPrice(),
-            carEntity.getStatus(),
-            carEntity.getDescription(),
-            carEntity.getImage(),
-            carEntity.getImageType(),
-            carEntity.getCreateDate(),
-            carEntity.getUpdateDate()
-    );
-} catch (Exception e) {
-    e.printStackTrace();
-    return null;
-}
+            handleImageUpload(car.getImage(), carEntity);
+            carRepository.save(carEntity);
+
+            return new CarResponse(carEntity.getId(),
+                    carEntity.getBrand(),
+                    carEntity.getModel(),
+                    carEntity.getType(),
+                    carEntity.getFuelType(),
+                    carEntity.getRegistrationNumber(),
+                    carEntity.getYear(),
+                    carEntity.getSeatingCapacity(),
+                    carEntity.getDailyRentalPrice(),
+                    carEntity.getStatus(),
+                    carEntity.getDescription(),
+                    carEntity.getImage(),
+                    carEntity.getImageType(),
+                    carEntity.getCreateDate(),
+                    carEntity.getUpdateDate(),
+                    carEntity.getRatingAverage(),
+                    carEntity.getRatingCount()
+            );
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     @Override
@@ -105,7 +108,9 @@ try {
                     carEntity.getImage(),
                     carEntity.getImageType(),
                     carEntity.getCreateDate(),
-                    carEntity.getUpdateDate()
+                    carEntity.getUpdateDate(),
+                    carEntity.getRatingAverage(),
+                    carEntity.getRatingCount()
             ));
         }
         return carList;
@@ -129,7 +134,9 @@ try {
                 carEntity.getImage(),
                 carEntity.getImageType(),
                 carEntity.getCreateDate(),
-                carEntity.getUpdateDate());
+                carEntity.getUpdateDate(),
+                carEntity.getRatingAverage(),
+                carEntity.getRatingCount());
     }
 
     @Override
@@ -162,7 +169,7 @@ try {
             throw new RuntimeException("Invalid Status " + car.getStatus());
         }
 
-        handleImageUpload(car.getImage(),carEntity);
+        handleImageUpload(car.getImage(), carEntity);
         carRepository.save(carEntity);
 
         return new CarResponse(
@@ -180,7 +187,9 @@ try {
                 carEntity.getImage(),
                 carEntity.getImageType(),
                 carEntity.getCreateDate(),
-                carEntity.getUpdateDate()
+                carEntity.getUpdateDate(),
+                carEntity.getRatingAverage(),
+                carEntity.getRatingCount()
 
         );
     }
@@ -212,7 +221,9 @@ try {
                         carEntity.getImage(),
                         carEntity.getImageType(),
                         carEntity.getCreateDate(),
-                        carEntity.getUpdateDate()
+                        carEntity.getUpdateDate(),
+                        carEntity.getRatingAverage(),
+                        carEntity.getRatingCount()
                 ));
 
             }
@@ -224,52 +235,101 @@ try {
 
     @Override
     public List<CarResponse> searchCars(String brand, CarType car, Double minPrice, Double maxPrice) {
-            Specification<CarEntity> spec = null;
+        Specification<CarEntity> spec = null;
 
 
-            if (brand != null && !brand.isBlank()) {
-                spec = CarSpecification.hasBrand(brand);
-            }
-
-            if (car != null) {
-                spec = (spec == null) ? CarSpecification.hasType(car) : spec.and(CarSpecification.hasType(car));
-            }
-
-            if (minPrice != null && minPrice > 0) {
-                spec = (spec == null) ? CarSpecification.minPrice(minPrice) : spec.and(CarSpecification.minPrice(minPrice));
-            }
-
-            if (maxPrice != null && maxPrice > 0) {
-                spec = (spec == null) ? CarSpecification.maxPrice(maxPrice) : spec.and(CarSpecification.maxPrice(maxPrice));
-            }
-
-            List<CarEntity> result = (spec == null) ? carRepository.findAll() : carRepository.findAll(spec);
-
-            return result.stream()
-                    .map(carEntity -> new CarResponse(
-                            carEntity.getId(),
-                            carEntity.getBrand(),
-                            carEntity.getModel(),
-                            carEntity.getType(),
-                            carEntity.getFuelType(),
-                            carEntity.getRegistrationNumber(),
-                            carEntity.getYear(),
-                            carEntity.getSeatingCapacity(),
-                            carEntity.getDailyRentalPrice(),
-                            carEntity.getStatus(),
-                            carEntity.getDescription(),
-                            carEntity.getImage(),
-                            carEntity.getImageType(),
-                            carEntity.getCreateDate(),
-                            carEntity.getUpdateDate()
-                    ))
-                    .toList();
+        if (brand != null && !brand.isBlank()) {
+            spec = CarSpecification.hasBrand(brand);
         }
 
-    private void handleImageUpload(MultipartFile imageFile,CarEntity carEntity){
-        if(imageFile!=null && !imageFile.isEmpty()){
+        if (car != null) {
+            spec = (spec == null) ? CarSpecification.hasType(car) : spec.and(CarSpecification.hasType(car));
+        }
 
-                validateImageFile(imageFile);
+        if (minPrice != null && minPrice > 0) {
+            spec = (spec == null) ? CarSpecification.minPrice(minPrice) : spec.and(CarSpecification.minPrice(minPrice));
+        }
+
+        if (maxPrice != null && maxPrice > 0) {
+            spec = (spec == null) ? CarSpecification.maxPrice(maxPrice) : spec.and(CarSpecification.maxPrice(maxPrice));
+        }
+
+        List<CarEntity> result = (spec == null) ? carRepository.findAll() : carRepository.findAll(spec);
+
+        return result.stream()
+                .map(carEntity -> new CarResponse(
+                        carEntity.getId(),
+                        carEntity.getBrand(),
+                        carEntity.getModel(),
+                        carEntity.getType(),
+                        carEntity.getFuelType(),
+                        carEntity.getRegistrationNumber(),
+                        carEntity.getYear(),
+                        carEntity.getSeatingCapacity(),
+                        carEntity.getDailyRentalPrice(),
+                        carEntity.getStatus(),
+                        carEntity.getDescription(),
+                        carEntity.getImage(),
+                        carEntity.getImageType(),
+                        carEntity.getCreateDate(),
+                        carEntity.getUpdateDate(),
+                        carEntity.getRatingAverage(),
+                        carEntity.getRatingCount()
+                ))
+                .toList();
+    }
+
+    @Override
+    public CarResponse updateRatings(Long id, int newRating) {
+
+        if (newRating < 1 || newRating > 5) {
+            throw new RuntimeException("Rating must be between 1 and 5");
+        }
+
+        CarEntity car = carRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Car not found"));
+
+        int count = car.getRatingCount();
+        double avg = car.getRatingAverage();
+
+        double total = avg * count;
+
+        count++;
+        double newAverage = (total + newRating) / count;
+
+        newAverage = Math.round(newAverage * 10.0) / 10.0;
+
+        car.setRatingCount(count);
+        car.setRatingAverage(newAverage);
+
+        carRepository.save(car);
+
+        return new CarResponse(
+                car.getId(),
+                car.getModel(),
+                car.getBrand(),
+                car.getType(),
+                car.getFuelType(),
+                car.getRegistrationNumber(),
+                car.getYear(),
+                car.getSeatingCapacity(),
+                car.getDailyRentalPrice(),
+                car.getStatus(),
+                car.getDescription(),
+                car.getImage(),
+                car.getImageType(),
+                car.getCreateDate(),
+                car.getUpdateDate(),
+                car.getRatingAverage(),
+                car.getRatingCount()
+        );
+    }
+
+
+    private void handleImageUpload(MultipartFile imageFile, CarEntity carEntity) {
+        if (imageFile != null && !imageFile.isEmpty()) {
+
+            validateImageFile(imageFile);
             try {
                 carEntity.setImage(imageFile.getBytes());
                 carEntity.setImageType(imageFile.getContentType());

@@ -11,6 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 
 import java.math.BigDecimal;
+import java.util.Map;
 
 @Data
 @AllArgsConstructor
@@ -25,7 +26,6 @@ public class CarRequest {
 
     @NotBlank(message = "Model is required")
     private String model;
-
 
     @NotBlank(message = "Status is required")
     private String status;
@@ -55,4 +55,5 @@ public class CarRequest {
 
 
     private MultipartFile image;
+
 }

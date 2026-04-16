@@ -46,7 +46,13 @@ public class CarController {
         return carService.updateCarDetails(id, car);
     }
 
-     //delete car
+    //update car after rate
+    @PutMapping("rates/{id}")
+    public CarResponse updateRatings(@PathVariable Long id,@RequestParam int rating){
+        return carService.updateRatings(id,rating);
+    }
+
+    //delete car
     @DeleteMapping("/{id}")
     public void deleteCar(@PathVariable Long id) {
         carService.deleteCar(id);

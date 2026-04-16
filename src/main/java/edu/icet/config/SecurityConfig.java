@@ -42,18 +42,20 @@ public class SecurityConfig {
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(
-                                "/user-control/**",
-                                "/auth/register",
-                                "/auth/login"
-
-                        ).permitAll()
+                        .requestMatchers("/feedback/**").permitAll()
+                        .requestMatchers("/user-control/**").permitAll()
+                        .requestMatchers("/auth/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/cars/**").permitAll()
-                        .requestMatchers("/cars/**").hasAnyRole("USER", "ADMIN")
                         .requestMatchers("/bookings/**").permitAll()
                         .requestMatchers("/payments/**").permitAll()
+                        .requestMatchers("/ratings/**").permitAll()
+                        .requestMatchers("/cars/**").hasAnyRole("USER", "ADMIN")
+                        .requestMatchers("/ai/**").permitAll()
                         .anyRequest().authenticated()
                 )
+
+
+
                 .authenticationProvider(authenticationProvider())
                 .addFilterBefore(
                         jwtFilter,
