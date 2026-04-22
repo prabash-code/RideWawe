@@ -8,6 +8,7 @@ import edu.icet.model.entity.CarType;
 import edu.icet.model.entity.FuelType;
 import edu.icet.repository.CarRepository;
 import edu.icet.service.CarService;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
@@ -24,6 +25,7 @@ import java.util.List;
 public class CarServiceImpl implements CarService {
     private final CarRepository carRepository;
 
+    @Transactional
     @Override
     public CarResponse addNewCar(CarRequest car) {
         try {
@@ -138,11 +140,10 @@ public class CarServiceImpl implements CarService {
                 carEntity.getRatingAverage(),
                 carEntity.getRatingCount());
     }
-
+    @Transactional
     @Override
     public CarResponse updateCarDetails(Long id, CarRequest car) {
-        CarEntity carEntity = carRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Car not found with id " + id));
+        CarEntity carEntity = carRepository.findCarForUpdate(id);
 
         carEntity.setBrand(car.getBrand());
         try {
@@ -194,6 +195,7 @@ public class CarServiceImpl implements CarService {
         );
     }
 
+    @Transactional
     @Override
     public void deleteCar(Long id) {
         carRepository.deleteById(id);
@@ -205,7 +207,7 @@ public class CarServiceImpl implements CarService {
         List<CarEntity> all = carRepository.findAll();
         List<CarResponse> available = new ArrayList<>();
         for (CarEntity carEntity : all) {
-            if ("AVAILABLE".equals(carEntity.getStatus().toString())) {
+            if (carEntity.getStatus()==CarStatus.AVAILABLE) {
                 available.add(new CarResponse(
                         carEntity.getId(),
                         carEntity.getBrand(),
@@ -279,6 +281,7 @@ public class CarServiceImpl implements CarService {
                 .toList();
     }
 
+    @Transactional
     @Override
     public CarResponse updateRatings(Long id, int newRating) {
 
@@ -286,8 +289,8 @@ public class CarServiceImpl implements CarService {
             throw new RuntimeException("Rating must be between 1 and 5");
         }
 
-        CarEntity car = carRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Car not found"));
+        CarEntity car = carRepository.findCarForUpdate(id);
+
 
         int count = car.getRatingCount();
         double avg = car.getRatingAverage();
