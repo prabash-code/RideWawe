@@ -42,7 +42,7 @@ public class SecurityConfig {
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/feedback/**").permitAll()
+                        .requestMatchers("/feedback", "/feedback/**").permitAll()
                         .requestMatchers("/user-control/**").permitAll()
                         .requestMatchers("/auth/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/cars/**").permitAll()
@@ -90,6 +90,8 @@ public class SecurityConfig {
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true);
         config.addAllowedOrigin("http://localhost:5173");
+        config.addAllowedOriginPattern("http://localhost:*");
+        config.addAllowedOriginPattern("http://127.0.0.1:*");
         config.addAllowedHeader("*");
         config.addAllowedMethod("*");
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();

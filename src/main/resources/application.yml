@@ -5,7 +5,7 @@ spring:
   datasource:
     url: jdbc:mysql://localhost:3306/ride_wawe?createDatabaseIfNotExist=true
     username: root
-    password:
+    password: 1234
     driver-class-name: com.mysql.cj.jdbc.Driver
 
   jpa:
@@ -14,7 +14,7 @@ spring:
     show-sql: true
 
 jwt:
-  secret:
+  secret: QEYjUmVValqYNyNxdDh4L0E/RChHLUtiUGRTZ1ZrWWc=
   expiration: 3600000
 
 logging:
