@@ -32,7 +32,7 @@ public class FeedbackEntity {
     @Column(nullable = false)
     private int ratings;
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "TEXT")
     private String review;
 
     @CreatedDate
